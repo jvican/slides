@@ -31,8 +31,21 @@ object Themes {
 }
 
 object RevealJs extends com.geirsson.scalatags.Tags {
-  def twitter = a(href := "https://twitter.com/olafurpg", "@olafurpg")
+  def frame = div("Jorge Vicente Cantero (", twitter, ")", br, organization)
+  def bspFrame = table(
+    div("Jorge Vicente Cantero (", twitter, ")", br, organization),
+    br,
+    div("Justin Keaser(", jtwitter, ")", br, jorganization)
+  )
+  def twitter = a(href := "https://twitter.com/jvican", "@jvican")
+  def jtwitter = a(href := "https://twitter.com/ebenwert", "@ebenwert")
+  def organization = a(href := "https://scala.epfl.ch", "Scala Center")
+  def jorganization = a(href := "http://jetbrains.com/", "Jetbrains")
   def fragment = `class` := "fragment"
+  def fragmentdiv(tag: Modifier*) = div(fragment, tag)
+  h3
+
+  def smallerH3(text: Text.Modifier*) = h3(style := "font-size: 1.45em;", text)
 
   `font` := "white"
 
@@ -43,6 +56,8 @@ object RevealJs extends com.geirsson.scalatags.Tags {
       ))
     script(raw(contents))
   }
+
+  def border(tag: Text.Modifier*) = div(style := "border: 4px solid #000;", tag)
 
   def header(deck: SlideDeck) =
     raw(s"""
@@ -64,7 +79,7 @@ object RevealJs extends com.geirsson.scalatags.Tags {
            |		<link rel="stylesheet" href="css/custom.css">
            |
            |		<!-- Theme used for syntax highlighting of code -->
-           |		<link rel="stylesheet" href="lib/css/zenburn.css">
+           |		<link rel="stylesheet" href="lib/css/github.css">
            |
            |		<!-- Printing and PDF exports -->
            |		<script>
@@ -81,12 +96,37 @@ object RevealJs extends com.geirsson.scalatags.Tags {
            |	</head>
     """.stripMargin)
 
-  def dot(code: String): Frag = {
+  def dotty(code: String, rankdir: String = "LR"): Frag = {
     import scala.sys.process._
     import java.io.ByteArrayInputStream
     val bais = new ByteArrayInputStream(
       s"""digraph X {
-         |  rankdir=LR;
+         |  rankdir=$rankdir;
+         |  bgcolor=transparent;
+         |  colorscheme=bugn9;
+         |  graph [fontname = "Inconsolata"];
+         |  node [shape=box, fontname = "Inconsolata"];
+         |  edge [fontname = "Inconsolata"];
+         |  $code
+         |}""".stripMargin.toString
+        .getBytes("UTF-8")
+    )
+    val command = List("dot", "-Tsvg")
+    val svg = (command #< bais).!!.trim
+      .replaceFirst("\n<svg.*?\n", "\n<svg width=\"70%\" height=\"30%\"\n")
+    println(svg)
+    raw(svg)
+  }
+
+  def dottyVertical(code: String): Frag = dotty(code, "TB")
+  def dotVertical(code: String): Frag = dot(code, "TB")
+
+  def dot(code: String, rankdir: String = "LR"): Frag = {
+    import scala.sys.process._
+    import java.io.ByteArrayInputStream
+    val bais = new ByteArrayInputStream(
+      s"""digraph X {
+         |  rankdir=$rankdir;
          |  bgcolor=transparent;
          |  colorscheme=bugn9;
          |  graph [fontname = "Inconsolata"];
@@ -102,6 +142,50 @@ object RevealJs extends com.geirsson.scalatags.Tags {
     println(svg)
     raw(svg)
   }
+
+  def cs(code: String, rankdir: String = "LR"): Frag = {
+    import scala.sys.process._
+    import java.io.ByteArrayInputStream
+    val bais = new ByteArrayInputStream(
+      s"""digraph X {
+         |  rankdir=$rankdir;
+         |  bgcolor=transparent;
+         |  colorscheme=bugn9;
+         |  graph [fontname = "Inconsolata"];
+         |  node [shape=circle, fontname = "Inconsolata"];
+         |  edge [fontname = "Inconsolata"];
+         |  $code
+         |}""".stripMargin.toString
+        .getBytes("UTF-8")
+    )
+    val command = List("dot", "-Tsvg")
+    val svg = (command #< bais).!!.trim
+      .replaceFirst("\n<svg.*?\n", "\n<svg width=\"70%\" height=\"30%\"\n")
+    println(svg)
+    raw(svg)
+  }
+
+  def graph(code: String): Frag = {
+    import scala.sys.process._
+    import java.io.ByteArrayInputStream
+    val bais = new ByteArrayInputStream(
+      s"""digraph X {
+         |  bgcolor=transparent;
+         |  colorscheme=bugn9;
+         |  graph [fontname = "Inconsolata"];
+         |  node [shape=box, fontname = "Inconsolata"];
+         |  edge [fontname = "Inconsolata"];
+         |  $code
+         |}""".stripMargin.toString
+        .getBytes("UTF-8")
+    )
+    val command = List("dot", "-Tsvg")
+    val svg = (command #< bais).!!.trim
+      .replaceFirst("\n<svg.*?\n", "\n<svg width=\"100%\" height=\"70%\"\n")
+    println(svg)
+    raw(svg)
+  }
+
 def footer =
     raw(
       """
@@ -109,7 +193,7 @@ def footer =
         |		<script src="js/reveal.js"></script>
         |  <style>
         |    body:after {
-        |      content: url(img/scalacenter-small.png);
+        |      content: url(img/scalacenter-jetbrains.png);
         |      position: fixed;
         |      top: 3.9em;
         |      right: 3.9em;
@@ -143,6 +227,16 @@ def footer =
   def skipSlide(tags: Text.Modifier*) = span("")
 
   def wrap(tags: Text.Modifier*) = section(tags: _*)
+
+  def note(tags: Text.Modifier*) = div(
+    style := "font-size: 16px;",
+    tags
+  )
+
+  def smaller(tags: Text.Modifier*) = div(
+    style := "font-size: 70%px; top: -20px;",
+    tags
+  )
 
   def slide(tags: Text.Modifier*) = section(tags: _*)
   def embedVideo(file: String) = {
@@ -215,12 +309,22 @@ def footer =
 
   def highlight(codeToHighlight: String) = hl.scala(codeToHighlight)
 
-  class hl(lang: String) {
+  def red(mods: Modifier*) = {
+    div(
+      style := "background-color: red;",
+      mods
+    )
+  }
+
+  class hl(lang: String, shortSnippet: Boolean, tight: Boolean = false) {
     def apply(codeToHighlight: String) = {
+      val extra = if (tight) "; margin: 0 auto; max-width: 700px;" else ""
+      val minWidth = if (shortSnippet) 300 else 430
       pre(
-        style := "font-size: 0.56em", // fits 80 characters on column in my machine
+        style := s"font-size: 0.56em$extra", // fits 80 characters on column in my machine
         code(
-          `class` := s"hljs $lang",
+          `class` := s"hljs .github-gist github-gist $lang",
+          style := s"min-width: ${minWidth}px",
           contentEdit,
           dataTrim,
           fixBrokenIndent(codeToHighlight)
@@ -234,7 +338,9 @@ def footer =
   def comment(str: String) = span("")
 
   object hl {
-    val scala = new hl("scala")
-    val diff = new hl("diff")
+    val scala = new hl("scala", true)
+    val longScala = new hl("scala", false)
+    val diff = new hl("diff", true)
+    val shortScala = new hl(lang = "scala", shortSnippet = true, tight = true)
   }
 }

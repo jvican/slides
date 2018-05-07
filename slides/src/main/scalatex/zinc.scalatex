@@ -1,0 +1,723 @@
+@import com.geirsson.reavealjs.RevealJs._
+
+@def selfSlides = a(href:="https://geirsson.com/assets/flatmap-2017/#/", "geirsson.com/assets/flatmap-2017")
+
+@slide
+  @h2
+    Scala incremental compilation
+  @h3
+    Basics, challenges and tricks
+  @br
+  @br
+    Jorge Vicente Cantero @i(" @ ") Scala Center @br
+    @twitter
+  @comment
+    img(style := "border: none; width: 15%; box-shadow: none;", src:="img/scalacenter.png")
+@slide
+  @h2
+    About me
+  @ul
+    @li
+      Devtools for ~1.5 years
+      @ul
+        @li
+          I hack on scalac and incremental compilation
+        @li
+          I hack on build tools
+        @li
+          I hack on compiler plugins & infrastructure
+    @li
+      Scala Improvement Process (SIP) lead
+        @ul
+          @li
+            Evolving the Scala language
+    @li
+      My obsession is developer productivity
+@slide
+  @h2
+    Scala Center
+  @p
+    @img(style := "border: none; wirth: 15%; box-shadow: none;", src:="img/scalacenter.png")
+  @blockquote
+    "For open source. For education."
+@slide
+  @h2
+    Agenda
+  @ol
+    @li
+      Motivation
+    @li
+      Challenges
+    @li
+      How it works
+    @li
+      Developer tricks
+    @li
+      Status and what's next
+    @li
+      Summary
+@slide
+  @h1
+    1. Why?
+@slide
+  @blockquote
+    «Batch Scala compilers are just too slow.»
+    @br
+    @p
+      @(fontSize := "0.6em")
+      -- A casual bystander
+  @blockquote
+    «I feel terribly unproductive; help me!»
+    @br
+    @p
+      @(fontSize := "0.6em")
+      -- A desperate Scala 2.8.x developer
+@slide
+  @img(src:="img/zinc.jpg")
+  @blockquote
+      Make compilation faster.
+      @br
+      Don't sacrifice correctness.
+  @br
+  @ul
+    @li
+      Created by Mark Harrah in 2008
+    @li
+      Maintained by the Scala Center & the sbt team
+    @li
+      Used by @lnk("sbt", "https://github.com/sbt/sbt"),
+      @lnk("pants", "https://github.com/pantsbuild/pants"),
+      @lnk("Maven", "https://github.com/apache/maven"),
+      @lnk("Gradle", "https://github.com/gradle/gradle") and
+      @lnk("Gatling", "https://github.com/gatling/gatling")
+@slide
+  @h2
+    2. Challenges?
+  @h3
+    Hell, yeah.
+  @br
+  @ul
+    @li
+      Scala is a @s{complex} rich language
+      @ul
+        @li
+          Entangled type and term dependencies
+        @li
+          Non-trivial feature interactions
+    @li
+      @code("{Speed, Correctness}") are in conflict
+    @li
+      Incrementally compile both Java and Scala
+
+@slide
+  @h3
+    Let's start with an example
+  @br
+  @table
+    @tr
+      @th
+        A.scala
+      @th
+        B.scala
+      @th
+        C.scala
+    @tr
+      @td
+        @hl.scala
+          abstract class A {
+            type T
+            def foo(t: T): T = t
+          }
+      @td
+        @hl.scala
+          object B extends A {
+            type T = Int
+          }
+      @td
+        @hl.scala
+          object UserB {
+            val y: Int = B.foo(1)
+          }
+@slide
+  @h3
+    Let's make a bold change
+  @hl.diff
+    --- a/B.scala
+    +++ b/B.scala
+    - type T = Int
+    + type T = String
+@slide
+  @h2
+    What to do
+  @h3
+    Obvious, isn't it?
+  @br
+  @table
+    @tr
+      @th
+        A.scala
+      @th
+        B.scala
+      @th
+        C.scala
+    @tr
+      @td
+        @hl.scala
+          abstract class A {
+            type T
+            def foo(t: T): T = t
+          }
+      @td
+        @hl.scala
+          object B extends A {
+            type T = Int
+          }
+      @td
+        @red
+          @hl.scala
+            object UserB {
+              val y: Int = B.foo(1)
+            }
+@slide
+  @h3
+    Scalac doesn't agree
+  @h4 This is what it sees.
+  @br
+  @br
+  @table
+    @tr
+      @th
+        B.scala
+      @th
+        C.scala
+    @tr
+      @td
+        @hl.longScala
+          object B extends A {
+            type T = Int
+            // This is inherited
+            def foo(t: Int): Int = t
+          }
+      @td
+        @hl.scala
+          object UserB {
+            val y: Int = B.foo(1)
+          }
+   @dotty
+     UserB -> foo;
+     foo -> Int;
+@slide
+  @h2
+    Preliminary guesses
+  @br
+  @ul
+    @li
+      Inheritance @b{+} abstract types = @b{Hairy} analysis
+    @li
+      Different dependency extraction algorithms
+      @ul
+        @li
+          With different asymptotic complexity
+        @li
+          With different real-world performance
+    @li
+      Compiler data structures do not make the task easy
+      @ul
+        @li
+          Trees, symbols, and types.
+@slide
+  @h2
+    3. How it works
+  @h3
+    Let's get a basic intuition.
+@slide
+  @h3
+    A simple example
+  @h4
+    From the @lnk("Docs", "http://www.scala-sbt.org/1.0/docs/Understanding-Recompilation.html#Implementation+of+incremental+recompilation").
+  @table
+    @tr
+      @th
+        Math.scala
+      @th
+        MathUser.scala
+    @tr
+      @td
+        @hl.longScala
+          class Math {
+            def inc(x: Int): Int = x + 1
+          }
+      @td
+        @hl.longScala
+          class MathUser {
+            def use(m: Math, x: Int): Int =
+              m.inc(x)
+          }
+@slide
+  @h2
+    Scenario #1
+  @h3
+    Rename @code{inc} to @code{inc2}
+  @table
+    @tr
+      @th
+        Math.scala
+      @th
+        MathUser.scala
+    @tr
+      @td
+        @hl.longScala
+          class Math {
+            // def inc(x: Int): Int = x + 1
+            def inc2(x: Int): Int = x + 1
+          }
+      @td
+        @hl.longScala
+          class MathUser {
+            def use(m: Math, x: Int): Int =
+              m.inc(x)
+          }
+@slide
+  @h2
+    Expectations
+  @br
+  @h4
+    @ol
+      @li
+        Recompile @code{MathUser}
+      @li
+        Give compiler error
+  @hl.scala
+    MathUser.scala:3: error: value inc is not a member of Math
+           m.inc(x)
+             ^
+@slide
+  @h2
+    Naive incremental algorithm
+  @br
+  @graph
+    "Compile modified files" -> "Hash public APIs";
+    "Hash public APIs" -> "Stop" [label="If no change"];
+    "Hash public APIs" -> "Invalidate dependencies" [label="If changed"];
+    "Invalidate dependencies" -> "Recompile invalidated sources";
+    "Recompile invalidated sources" -> "Hash public APIs";
+@slide
+  @h2
+    Scenario #2
+  @h3
+    Add a method to @code{Math}
+  @table
+    @tr
+      @th
+        Math.scala
+      @th
+        MathUser.scala
+    @tr
+      @td
+        @hl.longScala
+          class Math {
+            def inc(x: Int): Int = x + 1
+            def dec(x: Int): Int = x - 1
+          }
+      @td
+        @hl.longScala
+          class MathUser {
+            def use(m: Math, x: Int): Int =
+              m.inc(x)
+          }
+@slide
+  @h2
+    Expectation
+  @h3
+    Don't recompile @code{MathUser}!
+@slide
+  @h2
+    What actually happens
+  @h4
+    Our initial algorithm recompiles @code{MathUser}.
+  @br
+    Takeaway: incrementality cannot be achieved @br
+    @b{only} with public API analysis.
+@slide
+  @h2
+    Need another approach
+@slide
+  @h2
+    What's the problem?
+  @h3
+    Source (in)compatibility
+  @br
+  @ul
+    @li
+      We want to detect:
+      @ul
+        @li
+          Source incompatible changes
+        @li
+          Semantic changes
+    @li
+      Scala makes it challenging. Why?
+    @li
+      Possible, but complex analysis.
+  @br
+  @br
+  @note
+    *This notion of source compatibility considers semantics.
+@slide
+  @h2
+    Scala idiosyncrasies
+  @h3
+    Extension methods (I)
+  @table
+    @tr
+      @th
+        Math.scala
+      @th
+        MathUser.scala
+    @tr
+      @td
+        @hl.longScala
+          package math
+          class Math {
+            def inc(x: Int): Int = x + 1
+            def dec(x: Int): Int = x - 1
+          }
+
+          implicit class XMath(m: Math) {
+            def inc2(x: Int): Int =
+              m.inc(m.inc(x))
+          }
+      @td
+        @hl.longScala
+          package math
+          class MathUser {
+            def use(m: Math, x: Int): Int =
+              m.inc2(x)
+          }
+@slide
+  @h2
+    Scala idiosyncrasies
+  @h3
+    Extension methods (II)
+  @table
+    @tr
+      @th
+        Math.scala
+      @th
+        MathUser.scala
+    @tr
+      @td
+        @hl.longScala
+          package math
+          class Math {
+            def inc(x: Int): Int = x + 1
+            def dec(x: Int): Int = x - 1
+            // Adding new method!
+            def inc2(x: Int): Int = x + 3
+          }
+
+          object Math {
+            implicit class XMath(m: Math) {
+              def inc2(x: Int): Int =
+                m.inc(m.inc(x))
+            }
+          }
+      @td
+        @hl.longScala
+          package math
+          class MathUser {
+            // for x=1, returns `4` not `3`
+            def use(m: Math, x: Int): Int =
+              m.inc2(x)
+          }
+@slide
+  @h2
+    On {bin, source} compatibility
+  @h4
+    Read up on it in @lnk("this Scala Contributors thread", "https://contributors.scala-lang.org/t/a-guide-on-binary-compatibility-need-your-input/1089/28").
+  @br
+  I @b{strongly} encourage Scala developers to understand it.
+  @ol
+    @li
+      For good Scala API design
+    @li
+      For maintaining a long-term community
+    @li
+      For best practices tooling-wise
+@slide
+  @h2
+    We need a precise incremental compiler
+  @h4
+    @fragment
+    That handles type aliases, abstract types,@br
+    extension methods, path-dependent types...
+@slide
+  @h2
+    Let's backtrack
+  @dot
+    "Correctness" -> "Understand Scala";
+    "Understand Scala" -> "Expensive analysis";
+    "Expensive analysis" -> "Slow";
+  @h4
+    is in contradiction with
+  @dot
+    "Fast" -> "Less work";
+    "Less work" -> "Cheaper analysis";
+    "Cheaper analysis" -> "Less correct";
+@slide
+  @h2
+    Solution?
+  @h3
+    Heuristics.
+  @img(src:="img/shortcut.jpg")
+@slide
+  @h2
+    Meet name hashing
+  @h4
+    Approximation for source (in)compatibility detection.
+  @br
+  @ol
+    @li
+      Let's scrap all used {type, term} names
+    @li
+      Let's have a name hash bucket per entity
+    @li
+      Let's use set operations to reason about conflicts
+@slide
+  @h2
+    Towards a complete algorithm
+@slide
+  @h3
+    Name hashing in action
+  @h4
+    Used names
+  {math, MathUser, use, m, Math, x, Int, XMath, inc2}
+  @br @br
+  @h4
+    Name hashes
+  {MathUser -> ...}
+  @hl.scala
+    package math
+    class MathUser {
+      // for x=1, returns `4` not `3`
+      def use(m: Math, x: Int): Int =
+        m.inc2(x)
+    }
+@slide
+  @h4
+    Used names
+  Math -> {math, Math, x, Int, XMath, m, inc2, -, +}@br
+  XMath -> {x, m, Int, XMath, Math, inc}
+  @br @br
+  @h4
+    Name hashes
+  {math.Math -> ..., math.Math.XMath -> ...)
+  @hl.scala
+    package math
+    class Math {
+      def inc(x: Int): Int = x + 1
+      def dec(x: Int): Int = x - 1
+      // Adding new method!
+      def inc2(x: Int): Int = x + 3
+    }
+
+    object Math {
+      implicit class XMath(m: Math) {
+        def inc2(x: Int): Int =
+          m.inc(m.inc(x))
+      }
+    }
+@slide
+  @h2
+    Complete incremental algorithm
+  @br
+  @graph
+    "Compile modified files" -> "Hash public APIs";
+    "Hash public APIs" -> "Stop" [label="If no change"];
+    "Hash public APIs" -> "Detect names and inheritance" [label="If changed"];
+    "Detect names and inheritance" -> "Invalidate conflicts";
+    "Invalidate conflicts" -> "Recompile sources" [label="If non empty"];
+    "Invalidate conflicts" -> "Stop" [label="If none"];
+    "Recompile sources" -> "Hash public APIs";
+@slide
+  @h2
+    The full story (I)
+  @h4
+    Zinc understands three kinds of dependencies @br
+    and handles them differently:
+  @br
+  @ol
+    @li
+      @fragment
+      @b{Member reference dependency}@br
+      Invalidation using name hashes.
+    @li
+      @fragment
+      @b{Inheritance dependency}@br
+      Invalidates its DAG of classes!
+    @li
+      @fragment
+      @b{Local inheritance dependency}@br
+      They don't invalidate.
+@slide
+  @h2
+    The full story (2)
+  @ol
+    @li
+      The actual algorithm is more complex
+    @li
+      It deals with constructors, @code{super}, @br
+      implicit use, exhaustivity checking, @br
+      named arguments, et cetera.
+    @li
+      Interested to know more? @lnk("Read the source!", "https://github.com/sbt/zinc/blob/1.x/internal/zinc-core/src/main/scala/sbt/internal/inc/IncrementalNameHashing.scala").
+@slide
+  @h2
+    4. Developer tricks
+  @h4
+    To speed up your productivity.
+@slide
+  @h3
+    Be precise with your term and type names
+  @h4
+    To avoid name clashes.
+  @br
+  Not only names of classes and methods, @br
+  but also class and method parameters...
+@slide
+  @h3
+    Use as many local classes as possible
+  @h4
+    Their invalidation logarithm is less strict than normal inheritance.
+  @hl.longScala
+    class Foo {
+      def foo(x: Int): Int = {
+        // This is a local class
+        case class Impl(b: Int)
+        // Do something with `Impl`
+        ???
+      }
+    }
+  @note
+    *Note that you can also use @code{private} classes.
+@slide
+  @h3
+    Write acyclic code
+  @ul
+    @li
+      It usually reveals a bad API design.
+    @li
+      Cake pattern? Avoid it.
+    @li
+      Less dependencies, faster incremental compiles.
+    @li
+      Enforce it with the @lnk("acyclic compiler plugin", "https://github.com/lihaoyi/acyclic").
+@slide
+  @h3
+    Don't stuff source files
+  @br
+  @ul
+    @li
+      The less class/object definitions@br
+      in a source file, @b{the better}.
+    @li
+      Though idiomatic in Scala, @br
+      it hurts compile times.
+@slide
+  @h3
+    Avoid wildcard and unused imports
+  @h4
+    They pollute the name scope
+  @ul
+    @li
+      Unused imports register unnecessary dependencies.
+    @li
+      Wildcard imports can hurt correctness.
+    @li
+      Sometimes, it's not possible.
+  @br
+  @br
+  @b{Advice: be always in control of scopes!}
+
+@slide
+  @h3
+    Use always explicit types for non-private members
+  @h4
+    Don't let type inference define your public APIs
+  @hl.longScala
+    class Foo {
+      // Bad!
+      def foo = 1
+      // Good
+      def bar: Int = 1
+    }
+@slide
+  @h2
+    5. Status and what's next
+@slide
+  @h3
+    Scala Center's contributions are @b{growing}
+  @h4
+    sbt/zinc
+
+  @img(style := "width: 70%", src:="img/zinc.png")
+@slide
+  @h3
+    Zinc 1.0 release
+  @h4
+    You can already use it in sbt 1.0
+  @img(style := "width: 70%", src:="img/sbt1.png")
+  @br
+  @ul
+    @li
+      More correct than 0.13.x.
+    @li
+      Faster compiles than 0.13.x.
+@slide
+  @h2
+    Future
+  @br
+  @ul
+    @li
+      @fragment
+      Improve correctness of the algorithm.
+    @li
+      @fragment
+      @lnk("SCP-015: Zinc performance", "https://github.com/scalacenter/advisoryboard/blob/master/proposals/015-zinc-performance.md").@br
+      @ul
+        @li
+          Reduce Zinc's overhead in big projects.
+        @li
+          Allow profiling of dependency analysis.
+      @br
+      Recommended by the Scala Center advisory board.
+@slide
+  @h2
+    6. Summary
+  @ul
+    @li
+      @fragment
+      Scala is a rich language
+    @li
+      @fragment
+      It features a non-trivial incremental compiler
+    @li
+      @fragment
+      When compile times are a problem, @br
+      Scala developers can make them faster
+    @li
+      @fragment
+      Contributors wanted!
+@slide
+  @(style := "text-align: left;")
+  @h1
+    Thanks.
+  @br
+  @ul
+    @li
+      Visit Zinc's repository: @a(href:="https://github.com/sbt/zinc", "sbt/zinc"). @br
+    @li
+      @a(href:="http://twitter.com/jvican", "Follow @jvican on Twitter.") @br
+    @li
+      @a(href:="https://gitter.im/sbt/zinc", "Chat on Gitter.") @br
+

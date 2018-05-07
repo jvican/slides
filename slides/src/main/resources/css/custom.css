@@ -7,14 +7,14 @@
   text-transform: none;
 }
 
+.reveal h1 {
+  font-size: 3em;
+}
+
 .reveal.black table,
 .reveal.moon table
 {
   color: white;
-}
-
-.reveal code {
-  font-size: 1.07em;
 }
 
 .reveal .slide-number {
@@ -24,4 +24,13 @@
 img.noborder {
   border: none;
   margin: 0px;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+  font-family: "Helvetica", "News Cycle", Impact, sans-serif;
 }

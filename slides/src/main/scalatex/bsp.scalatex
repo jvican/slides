@@ -1,0 +1,542 @@
+@import com.geirsson.reavealjs.RevealJs._
+
+@def selfSlides = a(href:="https://geirsson.com/assets/flatmap-2017/#/", "geirsson.com/assets/flatmap-2017")
+
+@slide
+  @h1
+    Build Server Protocol and new IDEAs
+ @slide
+  @h3
+    @img(style := "border: none; width: 30%; box-shadow: none;", src:="img/justin.jpeg")
+    @br
+    Justin @jtwitter
+  @ul
+    @li
+      Build tools engineer at @jorganization
+      @ul
+        @li
+          I work on the IntelliJ sbt integration
+        @li
+          I believe in tools before rules
+
+    @li
+      @b{Obsession}: build tools complaints in Gitter
+@slide
+  @h3
+    @img(style := "border: none; width: 30%; box-shadow: none;", src:="img/jvican.jpg")
+    @br
+    Jorge @twitter
+  @ul
+    @li
+      Devtools for ~2.5 years at @organization
+      @ul
+        @li
+          I co-maintain Scala's incremental compiler (Zinc)
+        @li
+          I work on build tools and build servers
+        @li
+          @code{scalac}, compiler plugins and infrastructure
+
+    @li
+      @b{Obsession}: developer productivity
+@slide
+  @br
+  @h2
+    @strong
+      Agenda
+  @h4
+  @ol
+    @li
+      The BSP IDEA
+    @li
+      The BSP protocol
+    @li
+      The BSP integrations
+    @br
+@slide
+  @border
+    @br
+    @h2
+      @strong
+        Goal
+    @h4
+    @ol
+      @li
+        Explain why BSP solves a real problem
+      @li
+        Share our findings with the audience
+      @br
+@slide
+  @h2
+    How BSP came up
+  @h3
+    ...
+@slide
+  @h2
+    Use case (I)
+  @h3
+    @i{Language servers}
+  @br
+  @img(style := "border: none; width: 85%; box-shadow: none;", src:="img/language-servers.svg")
+@slide
+  @h2
+    Use case (II)
+  @h3
+    @i{Editors}
+  @br
+  @img(style := "border: none; width: 70%; box-shadow: none;", src:="img/editors.svg")
+@slide
+  @h2
+    Build tools
+  @h3
+    As the ultimate source of truth
+  @br
+  @img(style := "border: none; width: 70%; box-shadow: none;", src:="img/build-tools.svg")
+@slide
+  @h3
+    @strong{100} combinations!
+  @br
+  @img(style := "border: none; width: 90%; box-shadow: none;", src:="img/editors-and-build-tools.svg")
+@slide
+  @h3
+    @strong{BSP} (Build Server Protocol) is an attempt to formalize the communication between @strong{language server/editors} and @strong{build tools}.
+@slide
+  @blockquote
+    @h4
+      «@strong{LSP} creates the opportunity to reduce the m-times-n complexity problem of providing a high level of support for @strong{any programming language} in any editor, IDE, or client endpoint to a simpler m-plus-n problem.»
+      @br
+      @p
+        @(fontSize := "0.75em")
+        -- https://langserver.org/
+@slide
+  @blockquote
+    @h4
+      «@strong{BSP} creates the opportunity to reduce the m-times-n complexity problem of providing a high level of support for @strong{any build tool} in any editor, IDE, or client endpoint to a simpler m-plus-n problem.»
+      @br
+      @p
+        @(fontSize := "0.75em")
+        -- Justin and Jorge
+@slide
+  @img(style := "border: none; width: 55%; box-shadow: none;", src:="img/sam.jpg")
+  @blockquote
+    @h4
+      «Bejeezus, I just want bloody fast and correct compiles for my team.»
+      @br
+      @p
+        @(fontSize := "0.75em")
+        -- Sam Halliday, serious devtools engineer
+@slide
+  @h3
+    Developer productivity engineers
+  @h4
+    @strong
+      want solutions that are
+  @br
+  @ol
+    @li
+      Extensible
+    @li
+      Easy to maintain
+    @li
+      And ideally
+      @ol
+        @li
+          Build tool independent
+        @li
+          Editor independent
+@slide
+  @h4
+    @hl.diff
+      --- a/nothing.properties
+      +++ b/bsp.properties
+      - build.tool.specific=true
+      - one.time.effort=false
+      - shared.code=false
+      - robust=false
+      - easier.to.maintain=false
+      - easier.to.test=false
+      + build.tool.specific=false
+      + one.time.effort=true
+      + shared.code=true
+      + robust=true
+      + easier.to.maintain=true
+      + easier.to.test=true
+
+@slide
+  @h2
+    @strong
+      BSP Protocol
+  @comment{Add warning signalling experimental protocol}
+  @comment{Explain we're open to feedback from STP-WG}
+@slide
+  @h2
+    Fundamentals I
+  @ol
+    @li
+      JSON-RPC-based protocol
+    @li
+      It has the notion of
+      @ul
+        @li
+          Request/Response
+        @li
+          Bidirectional notifications
+@slide
+  @h2
+    Fundamentals II
+  @ol
+    @li
+      Modelled after LSP
+      @ul
+        @li
+          Specification follows same format
+        @li
+          Client-driven design
+        @li
+          It reuses some LSP methods, e.g.
+        @ul
+          @li
+            @code{window/logMessage}
+          @li
+            @code{textDocument/publishDiagnostics}
+          @li
+            @code{$/cancelRequest}
+     @li
+       Aims to be implementable alongisde LSP
+@slide
+  @h2
+    Server lifetime
+  @br
+  @h5
+    @ul
+      @li
+        Firing up BSP server
+        @ul
+          @li
+            @code{stdin}/@code{stdout}
+          @li
+            TCP/UDP connections.
+          @li
+            Unix Sockets/Windows pipes
+      @li
+        Initializing BSP connection
+        @ul
+          @li
+            Similar to TCP 3-way handshake
+      @li
+        Shutting down the BSP server
+@slide
+  @h2
+    Server lifetime
+  @h4
+    @i{Request}
+  @cs
+    "Client" -> "Server" [label="build/initialize"]
+  @br
+  @hl.shortScala
+    trait InitializeBuildParams {
+      def rootUri: URI
+      def capabilities: BuildClientCapabilities
+    }
+    trait BuildClientCapabilities {
+        def languageIds: List[String]
+    }
+@slide
+  @h2
+    Server lifetime
+  @h4
+    @i{Response}
+  @cs
+    "Server" -> "Client" [label="response back"]
+  @br
+  @hl.shortScala
+    trait InitializeBuildResult {
+      capabilities: BuildServerCapabilities
+    }
+
+    trait BuildServerCapabilities {
+      compileProvider: Boolean
+      testProvider: Boolean
+      textDocumentBuildTargetsProvider: Boolean
+      dependencySourcesProvider: Boolean
+      buildTargetChangedProvider: Boolean
+    }
+@slide
+  @h2
+    Server lifetime
+  @h4
+    @i{Notification}
+  @cs
+    "Client" -> "Server" [label="build/initialized"]
+  @br
+  @hl.shortScala
+    trait InitializedBuildParams {}
+@slide
+  @h2
+    Server lifetime
+  @cs
+    "Client" -> "Server" [label="build/shutdown"]
+  @br
+  @cs
+    "Client" -> "Server" [label="build/exit"]
+@slide
+  @h3
+    Core data structure
+  @h4
+    A common notion of what a target is @br
+    across different build tools and language servers
+  @br
+  @hl.shortScala
+    trait BuildTarget {
+      def id: BuildTargetIdentifier
+      def displayName: Option[String]
+      def languageIds: List[String]
+      def data: Option[Json]
+    }
+
+    trait URI { def uri: String }
+    trait BuildTargetIdentifier {
+      def uri: URI
+    }
+
+  @dotty
+    "Build tool module" -> "Build target";
+    "Build target" -> "IDE module";
+@slide
+  @h3
+    @code{workspace/buildTargets}
+  @code{Client => Server} @br
+  @hl.shortScala
+    trait WorkspaceBuildTargetsParams {}
+  @br
+  @code{Server => Client} @br
+  @hl.shortScala
+    trait WorkspaceBuildTargetsResult {
+      def targets: List[BuildTarget]
+    }
+@slide
+  @smallerH3
+    @code{buildTarget/dependencySources}
+  @code{Client => Server} @br
+  @hl.shortScala
+    trait DependencySourcesParams {
+      def targets: List[BuildTargetIdentifier]
+    }
+  @br
+  @code{Server => Client} @br
+  @hl.shortScala
+    trait DependencySourcesResult {
+      def items: List[DependencySourcesItem]
+    }
+    trait DependencySourcesItem {
+      def target: BuildTargetIdentifier
+      def sources: List[URI]
+    }
+@slide
+  @h3
+    @code{buildTarget/compile}
+  @code{Client => Server} @br
+  @hl.shortScala
+    trait CompileParams {
+      def targets: List[BuildTargetIdentifier]
+      def arguments: List[Json]
+    }
+  @br
+  @code{Server => Client} @br
+  @hl.shortScala
+    trait CompileReport {
+      def items: List[CompileReportItem]
+    }
+    trait CompileReportItem {
+      def target: BuildTargetIdentifier
+      def errors: Long
+      def warnings: Long
+      def time: Option[Long]
+      def linesOfCode: Option[Long]
+    }
+@slide
+  @h3
+    @code{buildTarget/test}
+  @code{Client => Server} @br
+  @hl.shortScala
+    trait TestParams {
+      def targets: List[BuildTargetIdentifier]
+      def arguments: List[Json]
+    }
+  @br
+  @code{Server => Client} @br
+  @hl.shortScala
+    trait TestReport {
+      def items: List[TestReportItem]
+    }
+    trait TestReportItem {
+      def target: BuildTargetIdentifier
+      def compileReport: Option[CompileReportItem]
+      def passed: Long
+      def failed: Long
+      def ignored: Long
+      def time: Option[Long]
+    }
+@slide
+  @h3
+    Other BSP methods
+  @h4
+    Not covered in this presentation,@br
+    but present in the spec.
+  @br
+  @ul
+    @li
+      @code{buildTarget/didChange}
+    @li
+      @code{buildTarget/dependencyResources}
+    @li
+      @code{buildTarget/textDocuments}
+    @li
+      @code{textDocument/buildTargets}
+@slide
+  @img(style := "border: none; width: 30%; box-shadow: none;", src:="img/emoji-thinking.png")
+  @br
+  @br
+  @h4
+    So... is BSP language agnostic?
+  @h3
+    @fragment
+    @strong{Yes!}
+@slide
+  @dotVertical
+    "Scala extension" -> "BSP Core"
+    "Java extension" -> "BSP Core"
+    "Rust extension" -> "BSP Core"
+    "Javascript extension" -> "BSP Core"
+    "..." -> "BSP Core"
+  @h3
+    Meet language extensions
+  @h4
+    Extensions formalize language-specific metadata, like:
+  @ul
+    @li
+      Which standard library to use.
+    @li
+      Which platform a language runs on.
+    @li
+      Which compilation flags are enabled.
+@slide
+  @h3
+    Scala extension
+  @hl.shortScala
+    trait ScalaBuildTarget {
+      def scalaOrganization: String
+      def scalaCompiler: String
+      def scalaVersion: String
+      def scalaBinaryVersion: String
+      def platform: ScalaPlatform
+    }
+
+    object ScalaPlatform {
+      val JVM = 1
+      val JS = 2
+      val Native = 3
+    }
+@slide
+  @h3
+    @code{buildTarget/scalacOptions}
+  @code{Client => Server} @br
+  @hl.shortScala
+    trait ScalacOptionsParams {
+      def targets: List[BuildTargetIdentifier]
+    }
+  @br
+  @code{Server => Client} @br
+  @hl.shortScala
+    trait ScalacOptionsResult {
+      def items: List[ScalcOptionItem]
+    }
+
+    trait ScalacOptionsItem {
+        def target: BuildTargetIdentifier
+        def options: List[String]
+        def classpath: List[String]
+        def classDirectory: String
+    }
+@slide
+  @h3
+    @code{buildTarget/scalaTestClasses}
+  @code{Client => Server} @br
+  @hl.shortScala
+    trait ScalaTestClassesParams {
+      def targets: List[BuildTargetIdentifier]
+    }
+  @br
+  @code{Server => Client} @br
+  @hl.shortScala
+    trait ScalaTestClassesResult {
+      def items: List[ScalaTestClassesItem]
+    }
+    trait ScalaTestClassesItem {
+        def target: BuildTargetIdentifier
+        def classes: List[String]
+    }
+@slide
+  @h2
+    On the roadmap
+  @br
+  @ul
+    @li
+      Add BSP method for file watching.
+    @li
+      Add compile progress notifications.
+    @li
+      Add BSP @code{buildTarget/run}.
+    @li
+      Enable remote compilation.
+      @ul
+        @fragment
+        @li
+          How do we handle repository state?
+            @ul
+              @li
+                Pass in diffs like LSP does.
+              @li
+                Relay repo synchronization to third-party.
+@slide
+  @h2
+    On the roadmap
+  @br
+  @ul
+    @li
+      On the lookout for feedback
+      @ul
+        @li
+          @a(href:="https://github.com/scalacenter/bsp", "scalacenter/bsp") @br
+    @li
+      Formal proposal to STP-WG
+    @li
+      Scala/Scala.js-based client integrations:
+      @ul
+        @li
+          @code{vim}
+        @li
+          @code{vscode}
+        @li
+          @code{sublime/atom}
+@slide
+  @h2
+    IntelliJ integration
+@slide
+  @(style := "text-align: left;")
+  @h1
+    @fragment
+    Thanks.
+  @br
+  @ul
+    @li
+      Do you want to learn more?
+      @ul
+        @li
+          Come talk to us!
+        @li
+          Help improve the spec in @a(href:="https://github.com/scalacenter/bsp", "scalacenter/bsp") @br
+    @li
+      @a(href:="https://gitter.im/scalacenter/bloop", "Chat on Bloop's Gitter.") @br
+    @li
+      @a(href:="https://gitter.im/Jetbrains/intellij-scala", "Chat on intellij-scala's Gitter.") @br

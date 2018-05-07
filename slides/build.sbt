@@ -13,6 +13,11 @@ libraryDependencies ++= Seq(
 
 scalacOptions += "-deprecation"
 
+watchSources ++= {
+  val scalatexDir = baseDirectory.value / "src/main/scalatex"
+  Path.allSubpaths(scalatexDir).toIterator.map(_._1).toList
+}
+
 TaskKey[Unit]("check") := {
   val analysis = compile.in(Compile).dependsOn(clean.in(Compile)).value
   analysis.infos.allInfos.toList.foreach {

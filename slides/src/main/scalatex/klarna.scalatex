@@ -1,0 +1,482 @@
+@import com.geirsson.reavealjs.RevealJs._
+
+@def selfSlides = a(href:="https://geirsson.com/assets/flatmap-2017/#/", "geirsson.com/assets/flatmap-2017")
+
+@slide
+  @h1
+    A cost analysis of Scala
+  @br
+  @frame
+  @comment
+    img(style := "border: none; width: 15%; box-shadow: none;", src:="img/scalacenter.png")
+@slide
+  @h2
+    About me
+  @ul
+    @li
+      Devtools for ~2 years
+      @ul
+        @li
+          I maintain Scala's incremental compiler
+        @li
+          I work on build tools
+        @li
+          I hack on @code{scalac}
+        @li
+          Otherwise, compiler plugins & infrastructure
+    @li
+      Scala Improvement Process (SIP) lead
+        @ul
+          @li
+            Evolving the Scala language
+    @li
+      @b{Focus}: developer productivity
+@slide
+  @h2
+    Scala Center
+  @p
+    @img(style := "border: none; wirth: 15%; box-shadow: none;", src:="img/scalacenter.png")
+  @p
+    We're an @b{independent} non-profit.
+  @blockquote
+    "For open source. For education."
+@slide
+  @h2
+    What's this talk about?
+  @br
+  @ol
+    @li
+      A walk-through of Scala's predominant features.
+    @li
+      A hint on the very fundamentals of the language.
+    @li
+      An analysis of Scala's strengths and weaknesses.
+    @li
+      An explanation of why it's ideal for organizations.
+@slide
+  @h2
+    What's this not talk about?
+  @br
+  @ol
+    @li
+      An in-depth study of the language.
+    @li
+      A niche, research-level analysis of what it enables.
+    @li
+      A complete comparison to other programming languages.
+    @li
+      A digression on why @i{Rick Sanchez} would write Scala.
+@slide
+  @h2
+    A first analogy
+    @img(style := "border: none; width: 50%; box-shadow: none;", src:="img/pants.svg")
+@slide
+  @border
+    @br
+    @h2
+      Goal of this talk
+    @h3
+      Convince you flexible jeans are wicked!
+    @br
+@slide
+  @h1
+    Let's get started
+@slide
+  @h2
+    The fundamental idea
+  @br
+  @blockquote
+    «Object-oriented and functional programming are two sides of the same coin»
+    @br
+    @p
+      @(fontSize := "0.6em")
+      -- Martin Odersky
+@slide
+  @h2
+    More fundamentals
+  @br
+  @h4
+    @ul
+      @li
+        @fragment
+        Hey, static types!
+      @li
+        @fragment
+        Every function is a value.
+      @li
+        @fragment
+        Every value is an object.
+@slide
+  @table
+    @tr
+      @th
+        @h3{Scala features}
+    @tr
+      @td
+        Type inference
+    @tr
+      @td
+        Algebraic data types (case classes)
+    @tr
+      @td
+        Higher-order functions
+    @tr
+      @td
+        Pattern matching
+    @tr
+      @td
+        Anonymous functions
+    @tr
+      @td
+        For comprehensions
+    @tr
+      @td
+        Currying
+    @tr
+      @td
+        Default and named parameters
+@slide
+  @table
+    @tr
+      @th
+        @h3{Scala types}
+    @tr
+      @td
+        Classes and abstract types
+    @tr
+      @td
+        Compound types
+    @tr
+      @td
+        Path-dependent types
+    @tr
+      @td
+        Existential and structural types
+    @tr
+      @td
+        Compound types
+    @tr
+      @td
+        Upper and lower type bounds
+    @tr
+      @td
+        Polymorphic method types
+@slide
+  @h4
+    But really...
+  @h2
+    Scala is all about contexts
+@slide
+  @h3
+    Implicits
+  @h4
+    Powerful mechanism to inject localized knowledge into a scope.
+  @ul
+    @li
+      Implicit classes (extension methods)
+    @li
+      Implicit parameters and values
+    @li
+      Implicit conversions (will be limited)
+    @li
+      Implicit function types (in Dotty)
+@slide
+  @h3
+    Flexible use of packages
+  @br
+  @ul
+    @li
+      A package definition is an expression.
+    @li
+      A file can define several package definitions.
+    @li
+      You can use partial and fully qualified names in expressions.
+      @br
+      @br @code{println(my.package.Foo.helloWorld())}
+      @br @code{println(_root_.my.package.Foo.helloWorld())}
+@slide
+  @h3
+    Flexible use of imports
+  @br
+  @ul
+    @li
+      Global (at the top of the file, like Java)
+    @li
+      Local (anywhere inside a definition, like method or classes)
+    @li
+      Relative (a name from a value in your scope)
+    @li
+      Absolute (those prepended by @code{_root_})
+@slide
+  @h3
+    Flexible entity definitions
+  @br
+  @ul
+    @li
+      Classes, methods, types, values and objects!
+    @li
+      They can be defined almost everywhere!
+      @ul
+        @li
+          @fragment
+          Except in top-level positions.
+@slide
+  @h2
+    Expressivity and extensibility
+  @br
+  @h4
+    Write and maintain your code faster.
+  @ul
+    @li
+      No syntactic restrictions (see Java).
+    @li
+      Scopes are essential – they implicitly limit accessibility.
+    @li
+      They enable you to understand the intent of programmers.
+@slide
+  @border
+    @br
+    @h2
+      A program as a graph of scopes
+    @h4
+      @ul
+        @li
+          The edges are the names you choose.
+        @li
+          The arrows are the relationships among them.
+    @br
+@slide
+  @h2
+    But it's better as a forest.
+  @h4
+    Scala's expressitivity isolates your namespaces by design.
+    @img(style := "border: none; width: 75%; box-shadow: none;", src:="img/forest.png")
+@slide
+  @h2
+    Best namespace practices
+  @h4
+    @i{Use as many fully qualified names as possible,@br
+    avoid wildcard imports}
+  @ul
+    @fragmentdiv{
+        @li
+          Prefer using names with @b{prefixes}.
+    }
+    @fragmentdiv{
+        @li
+          Import names @b{explicitly} and scope them.
+    }
+    @fragmentdiv{
+        @li
+          Cherry-pick the implicits you're using. @br
+          May be difficult with certain libraries in the ecosystem.
+          @ul
+            @li
+              Plus: faster compiles.
+    }
+@slide
+  @h2
+    Benefits?
+  @ul
+    @li
+      Help readability of the code.
+      @ul
+        @li
+          Readers can grep through the code.
+    @li
+      Minimize future name conflicts and ease migration.
+      @ul
+        @li
+          Within your library.
+        @li
+          For new versions of library dependencies.
+    @li
+      Avoid semantic errors.
+        @ul
+          @li
+            Don't mistakenly use the wrong class name in production.
+    @li
+      Incremental compiler friendly!
+@slide
+  @h2
+    The main problem of Scala
+  @h4
+    Sometimes, its power may be overwhelming.
+  @img(style := "border: none; width: 55%; box-shadow: none;", src:="img/frustrated.jpg")
+@slide
+  @h2
+    Why?
+  @ul
+    @li
+      There's no opinionated guide, too many choices.
+    @li
+      All choices have (known and unknown) tradeoffs.
+    @li
+      People may abuse or misuse features.
+@slide
+  @h2
+    @code{Scala == Life}
+@slide
+  @h3
+    @b{There is no perfect language} @br
+  @br
+  @h4
+    Only great languages for certain circumstances.
+  @blockquote
+    True, Scala is not an opinionated language, but at the Scala Center we're building the tooling
+    so that you can make it opinionated. Languages must fit our needs.
+    @br
+    @p
+      @(fontSize := "0.6em")
+      -- Me
+@slide
+  @h2
+    What are big organizations doing?
+  @h4
+    Investing millions of dollars and thousands of engineers on tooling.
+  @ul
+    @li
+      They create their own languages (Go, Swift, Hack...)
+    @li
+      They create their own build tools (Bazel, Pants, Buck).
+    @li
+      They create their own infrastructure and devops.
+    @li
+      They create their own frameworks and protocols.
+  @br
+  Not only Google, Facebook, Twitter, Apple do.
+@slide
+  @h3
+    @code{"Owning your infrastructure"} @br
+    @code{==} @br
+    @code{"Owning your future"}
+  @br
+  @ul
+    @li
+      Requirements change.
+    @li
+      Circumstances change.
+    @li
+      People come and go away.
+@slide
+  @h3
+    Why should you not do the same?
+  @br
+  @ul
+    @li
+      @fragment
+      Money is not a limiting factor, tools are open source.
+    @li
+      @fragment
+      Knowledge is not a limiting factor, a community exists.
+    @li
+      @fragment
+      Complexity is not a limiting factor, simple APIs.
+@slide
+  @h3
+    What can you do?
+  @ul
+    @li
+      @fragment
+      Enforce a concrete formatting style, including names.
+    @li
+      @fragment
+      Prevent binary incompatible changes in production.
+    @li
+      @fragment
+      Prevent the use of concrete language features.
+    @li
+      @fragment
+      Create your own language on top of Scala.
+      @ul
+        @li
+          Easier than it seems.
+        @li
+          Really useful for complex domain specific tasks.
+    @li
+      @fragment
+      Rewrite your code from one shape to another one.
+    @li
+      @fragment
+      Get large-scale statistics of how your teams work.
+      @ul
+        @li
+          Proportion of language features in a codebase.
+        @li
+          Study of bottlenecks in compile and runtime performance.
+        @li
+          Avoid bugs caused by concrete patterns.
+@slide
+  @h2
+    A myriad of new use cases lie ahead.
+  @img(style := "border: none; width: 60%; box-shadow: none;", src:="img/landscape.jpg")
+@slide
+  @h2
+    Our efforts
+  @h4
+    The Scala Center is working a lot on tooling.
+  @br
+  @ul
+    @li
+      @fragment
+      A low-level, fast build tool is released in a week, @code{bloop}.
+    @li
+      @fragment
+      @lnk("Scalafix", "https://scalacenter.github.io/scalafix/"), a powerful rewriting and linting tool.
+    @li
+      @fragment
+      Simplifying the language, removing clunky features.
+    @li
+      @fragment
+      Starting to get involved in more tooling projects.
+    @li
+      @fragment
+      Cross-organization collaboration.
+      @ul
+        @li
+          Lightbend, Twitter, Morgan Stanley, and more.
+@slide
+  @h2
+    6. Summary
+  @ul
+    @li
+      @fragment
+      Scala is a rich and powerful language
+    @li
+      @fragment
+      Though it may be daunting sometimes
+    @li
+      @fragment
+      But we have ideas to make it simpler @br
+      And the tools to make you productive!
+    @li
+      @fragment
+      You can now fit the language to your needs. @br
+@slide
+  @h2
+    What's the future gonna look like?
+@slide
+  @h2
+    I don't know.
+  @h4
+    But Scala is a great language to figure it out.
+@slide
+  @(style := "text-align: left;")
+  @h1
+    @fragment
+    Thanks.
+  @br
+  @ul
+    @li
+      Do you want to learn more?
+      @ul
+        @li
+          Come to the Scala bridge tomorrow!
+        @li
+          Come talk to me after the talk.
+        @li
+          Contact me online.
+    @li
+      @a(href:="http://twitter.com/jvican", "Follow @jvican on Twitter.") @br
+    @li
+      @a(href:="https://gitter.im/sbt/zinc", "Chat on Gitter.") @br

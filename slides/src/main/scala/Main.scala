@@ -36,12 +36,27 @@ object Decks {
                                     "Ólafur Páll Geirsson",
                                     Themes.simple,
                                     scalatex.flatMap2017())
+  val zinc = SlideDeck("Scala's incremental compiler",
+                       "",
+                       "Jorge Vicente Cantero",
+                       Themes.simple,
+                       scalatex.zinc())
+  val klarna = SlideDeck("A cost analysis of Scala",
+                         "",
+                         "Jorge Vicente Cantero",
+                         Themes.simple,
+                         scalatex.klarna())
+  val bsp = SlideDeck("The BSP protocol and new IDEAs",
+    "",
+    "Jorge Vicente Cantero & Justin Kaeser",
+    Themes.simple,
+    scalatex.bsp())
 }
 
 object Main extends App {
 
   val pp = new scala.xml.PrettyPrinter(80, 2)
-  val scalatexOutput = RevealJs.render(Decks.flatmap_Oslo_2017)
+  val scalatexOutput = RevealJs.render(Decks.bsp)
 //  println(scalatexOutput)
   Files.write(Paths.get("target", "scala-2.11", "classes", "index.html"),
               scalatexOutput.getBytes)
