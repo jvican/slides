@@ -51,12 +51,18 @@ object Decks {
     "Jorge Vicente Cantero & Justin Kaeser",
     Themes.simple,
     scalatex.bsp())
+
+  val bloop = SlideDeck("Meet Bloop",
+    "",
+    "Jorge Vicente Cantero & Martin Duhem",
+    Themes.simple,
+    scalatex.bloop())
 }
 
 object Main extends App {
 
   val pp = new scala.xml.PrettyPrinter(80, 2)
-  val scalatexOutput = RevealJs.render(Decks.bsp)
+  val scalatexOutput = RevealJs.render(Decks.bloop)
 //  println(scalatexOutput)
   Files.write(Paths.get("target", "scala-2.11", "classes", "index.html"),
               scalatexOutput.getBytes)
