@@ -193,7 +193,7 @@ def footer =
         |		<script src="js/reveal.js"></script>
         |  <style>
         |    body:after {
-        |      content: url(img/scalacenter-jetbrains.png);
+        |      content: url(img/scalacenter-small.png);
         |      position: fixed;
         |      top: 3.9em;
         |      right: 3.9em;
