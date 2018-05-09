@@ -1,7 +1,5 @@
 @import com.geirsson.reavealjs.RevealJs._
 
-@def selfSlides = a(href:="https://geirsson.com/assets/flatmap-2017/#/", "geirsson.com/assets/flatmap-2017")
-
 @slide
   @h1
     Meet Bloop
