@@ -1,0 +1,13 @@
+@import com.geirsson.reavealjs.RevealJs._
+
+@def selfSlides = a(href:="https://geirsson.com/assets/flatmap-2017/#/", "geirsson.com/assets/flatmap-2017")
+
+@slide
+  @h1
+    Meet Bloop
+  @h3
+    And get more productive with Scala
+
+@slide
+  @img(src := "img/bloop.png",
+       style := "border: none; box-shadow: none; width: 80%")
