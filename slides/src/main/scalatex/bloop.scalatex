@@ -438,3 +438,10 @@
     Benchmarks
 
   @img(src := "img/bench-charts.png", style := "border: none; box-shadow: none")
+
+@slide
+  @h1
+    Thanks!
+
+  @h2
+    Questions?
