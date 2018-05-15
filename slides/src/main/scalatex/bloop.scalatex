@@ -261,22 +261,17 @@
   @h2
     Pioneering use cases
   @h3
-    Better caching opportunities
+    @strong{Better optimization opportunities}
   @ul
     @li
-      A compilation server knows more than a compiler
-      @ul
-        @li
-          Knowledge about the build graph and dependencies
-    @li
-      A compilation server can make better decisions
+      Knowledge about build graph enables
       @ul
         @li
           In-memory storage over writing to disk/SSD
         @li
           File watching files to invalidate caches across builds
         @li
-          Compilation bookkeeping can be parallel
+          Parallel compilation bookkeeping (classpath or source hashing)
 
 @slide
   @h2
