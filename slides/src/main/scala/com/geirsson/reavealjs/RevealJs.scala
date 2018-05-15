@@ -58,7 +58,7 @@ object RevealJs extends com.geirsson.scalatags.Tags {
     script(raw(contents))
   }
 
-  def border(tag: Text.Modifier*) = div(style := "border: 4px solid #000;", tag)
+  def border(tag: Text.Modifier*) = div(style := "border: 4px solid #000; padding: 20px;", tag)
 
   def header(deck: SlideDeck) =
     raw(s"""
@@ -96,6 +96,28 @@ object RevealJs extends com.geirsson.scalatags.Tags {
            |		<![endif]-->
            |	</head>
     """.stripMargin)
+
+  def dotLR(code: String, rankdir: String = "LR"): Frag = {
+    import scala.sys.process._
+    import java.io.ByteArrayInputStream
+    val bais = new ByteArrayInputStream(
+      s"""digraph X {
+         |  rankdir=$rankdir;
+         |  bgcolor=transparent;
+         |  colorscheme=bugn9;
+         |  graph [fontname = "Inconsolata"];
+         |  node [shape=box, fontname = "Inconsolata"];
+         |  edge [fontname = "Inconsolata"];
+         |  $code
+         |}""".stripMargin.toString
+        .getBytes("UTF-8")
+    )
+    val command = List("dot", "-Tsvg")
+    val svg = (command #< bais).!!.trim
+      .replaceFirst("\n<svg.*?\n", "\n<svg width=\"90%\" height=\"50%\"\n")
+    println(svg)
+    raw(svg)
+  }
 
   def dotty(code: String, rankdir: String = "LR"): Frag = {
     import scala.sys.process._

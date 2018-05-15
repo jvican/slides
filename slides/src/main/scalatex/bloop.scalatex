@@ -47,8 +47,11 @@
     @b{Productivity}: any task you do is bound by the speed of your thinking process, not the tools you use.
 
 @slide
-  @h3
-    @b{Minimize} the amount of time it passes between a change in the code and an execution result.
+  @border
+    @h2
+      Goal
+    @h3
+      @b{Minimize} the amount of time it passes between a change in the code and an execution result.
 
 @slide
   @img(src := "img/build-tools-monsters.png", style := "border: none; box-shadow: none; width: 100%")
@@ -64,9 +67,22 @@
 
 @slide
   @h2
+    @b{@code{zinc++}}
+  @h4
+    A gap to fill in
+    @ul
+      @li
+        @code{scalac} gives you only cold compilation.
+      @li
+        @code{scalac} doesn't give you incrementality.
+      @li
+        @code{scalac} cannot reuse information about the build.
+
+@slide
+  @h2
     @b{Old architecture}
 
-  @dotty
+  @dotLR
     "Build tool A" -> "Compiler A";
     "Other CLI tools" -> "Compiler B";
     "IDE" -> "Compiler C";
@@ -75,7 +91,7 @@
   @h2
     @b{New architecture}
 
-  @dotty
+  @dotLR
     "Build tool A" -> "Bloop";
     "Other CLI tools" -> "Bloop";
     "IDE" -> "Bloop";
@@ -90,7 +106,7 @@
 
 @slide
   @h3
-    Why being @b{hot} is important 🕺💃
+    Why being @b{hot} is important
   @h4
     @ul
       @li
@@ -134,23 +150,11 @@
       @strong
         "One server to compile them all"
   @h4
-    @hl.diff
-      --- a/nothing.properties
-      +++ b/bloop.properties
-      - build.tool.specific=true
-      - one.time.effort=false
-      - shared.code=false
-      - robust=false
-      - easier.to.maintain=false
-      - easier.to.test=false
-      - bigger.impact=false
-      + build.tool.specific=false
-      + one.time.effort=true
-      + shared.code=true
-      + robust=true
-      + easier.to.maintain=true
-      + easier.to.test=true
-      + bigger.impact=true
+    @ul
+      @li
+        Changes to the codebase have higher impact
+      @li
+        Easier to maintain, optimize and test
 
 @slide
   @h2
@@ -168,6 +172,13 @@
         -- Us
 
 @slide
+  @ul
+    @li
+      Improving only sbt is @strong{not} a solution.
+    @li
+      Improving only new build tools is @strong{not} a solution.
+
+@slide
   @h2
     Integrations
   @br
@@ -183,7 +194,7 @@
       Build-tool-agnostic:
       @ul
         @li
-          Currently: sbt, maven.
+          Current: sbt, maven.
         @li
           Future: bazel, gradle, pants and more!
 
