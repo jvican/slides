@@ -154,7 +154,7 @@
 
 @slide
   @h2
-    Integrations I
+    Integrations
   @h3
     @b{Paramount} for adoption.
   @img(src := "img/rick-morty-crying.png", style := "border: none; box-shadow: none; width: 70%")
@@ -169,7 +169,7 @@
 
 @slide
   @h2
-    Integrations II
+    Integrations
   @br
   @ul
     @li
@@ -183,13 +183,13 @@
       Build-tool-agnostic:
       @ul
         @li
-          Currently: sbt (0.13 and 1.0), maven.
+          Currently: sbt, maven.
         @li
           Future: bazel, gradle, pants and more!
 
 @slide
   @h2
-    Integrations III
+    Integrations
   @h3
     A command-line tool interface
   @ul
@@ -202,7 +202,7 @@
       @ul
         @li
           @fragment
-          Query build information from the project files.
+          Query build information from project files.
         @li
           @fragment
           Create a Ninja/Make-based build tool.
@@ -220,10 +220,11 @@
 
 @slide
   @h2
-    Integrations IV
-  @h3
     Build Server Protocol (@strong{BSP})
   @ul
+    @li
+      @fragment
+      Another way of integration with Bloop.
     @li
       @fragment
       An LSP-like protocol to communicate with build tools.
@@ -236,42 +237,96 @@
       @ul
         @li
           Presented by Jorge and Justin at @b{Scalasphere 2018}
-        @li
-          Demo of IntelliJ compiling with Bloop
 
 @slide
   @h2
-    New use cases
+    Build Server Protocol
+  @h3
+    Use cases
   @ul
     @li
       @fragment
-      Better caching opportunities
-      @ul
-        @li
-          In-memory over writing to disk
-        @li
-          Needs invalidation logic
+      Efficient @code{~compile} or @code{~test} from IntelliJ
     @li
       @fragment
-      Remote compilation, requires:
+      Editors notify modified files directly to the build tool
+    @li
+      @fragment
+      Better integration with build tools
       @ul
         @li
-          Independence of compile processes
-        @li
-          Deduplication of compile requests
+          sbt, maven, bazel, et cetera
 
+@slide
+  @h2
+    Pioneering use cases
+  @h3
+    Better caching opportunities
+  @ul
+    @li
+      A compilation server knows more than a compiler
+      @ul
+        @li
+          Knowledge about the build graph and dependencies
+    @li
+      A compilation server can make better decisions
+      @ul
+        @li
+          In-memory storage over writing to disk/SSD
+        @li
+          File watching files to invalidate caches across builds
+        @li
+          Compilation bookkeeping can be parallel
+
+@slide
+  @h2
+    Pioneering use cases
+  @h3
+    Remote compilation
+  @ul
     @li
       @fragment
-      Pipelined compilation
-        @ul
-          @li
-            Idea by Rory Graves (2017)
-          @li
-            Implementation for Zinc and Bloop (for now).
+      Popular use case for CI servers
+    @li
+      @fragment
+      Keep cloud instances alive for compilation jobs
+    @li
+      @fragment
+      Requires architectural changes:
+      @ul
+        @li
+          Independence of compile processes @br
+          (no shared state)
+        @li
+          Deduplication of compile requests @br
+          (only from file system)
+
+@slide
+  @h2
+    Pioneering use cases
+  @h3
+    Pipelined compilation
+    @ul
+      @li
+        @fragment
+        Pitched in by Rory Graves at Scalasphere 2017
+      @li
+        @fragment
+        High impact for both any build graph
+      @li
+        @fragment
+        Restricted when Java compilation is required
+      @li
+        @fragment
+        Implemented in Zinc and Bloop (for now).
+
+@slide
+  @h1
+    Compilation benchmarks
 
 @slide
   @h3
-    Benchmarking Bloop: sbt/sbt
+    @code{sbt/sbt}
 
   @ul
     @li
@@ -285,7 +340,7 @@
 
 @slide
   @h3
-    Benchmarking Bloop: guardian/frontend
+    @code{guardian/frontend}
 
   @ul
     @li
@@ -300,7 +355,7 @@
 
 @slide
   @h3
-    Benchmarking Bloop: akka/akka
+    @code{akka/akka}
 
   @ul
     @li
