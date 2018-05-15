@@ -354,59 +354,87 @@
     Compilation @strong{benchmarks}
 
 @slide
-  @h3
+  @h2
     @code{sbt/sbt}
 
+  @h3
+    @b{25% faster}
+
   @ul
     @li
-      @lnk("sbt/sbt", "https://github.com/sbt/sbt") is the Scala ecosystem's build tool.
+      The Scala ecosystem's build tool.
 
     @li
-      @b{852} source files, @b{51,408} lines of code, @b{20} modules.
+      Small to medium project
 
     @li
-      Compiles in @b{38.05} s with sbt, or @b{28.47} s (@b{75%}) in Bloop.
+      @b{800} source files, @b{50,000} lines of code, @b{20} modules
+
+    @li
+      Compiles in @b{38.05} s with sbt, or @b{28.47} s with Bloop
 
 @slide
-  @h3
+  @h2
     @code{guardian/frontend}
 
+  @h3
+    @b{28% faster}
+
   @ul
     @li
-      @lnk("guardian/frontend", "https://github.com/guardian/frontend") is the source for
-      theguardian.com.
+      The source for theguardian.com.
 
     @li
-      @b{1,750} source files, @b{175,628} lines of code, @b{18} modules.
+      Medium-sized project.
 
     @li
-      Compiles in @b{88.62} s with sbt, or @b{63.42} s (@b{72%}) in Bloop.
+      @b{1,800} source files, @b{180,000} lines of code, @b{18} modules.
+
+    @li
+      Compiles in @b{88.62} s with sbt, or @b{63.42} s.
 
 @slide
-  @h3
+  @h2
     @code{akka/akka}
 
+  @h3
+    @b{19% faster}
+
   @ul
     @li
-      @lnk("akka/akka", "https://github.com/akka/akka") is a toolkit for building concurrent apps.
+      Toolkit for building concurrent, distributed applications.
 
     @li
-      @b{1,775} source files, @b{330,555} lines of code, @b{36} modules.
+      Large project.
 
     @li
-      Compiles in @b{263.7} s with sbt, or @b{215.7} s (@b{81%}) in Bloop.
+      @b{1,800} source files, @b{330,000} lines of code, @b{36} modules.
+
+    @li
+      Compiles in @b{263.7} s with sbt, or @b{215.7} s.
+
+@slide
+  @h2
+    @code{apache/spark}
+
+  @h3
+    @b{28% faster}
+
+  @ul
+    @li
+      Cluster computing system for Big Data.
+
+    @li
+      Large project.
+
+    @li
+      @b{1,800} source files, @b{400,000} lines of code, @b{24} modules.
+
+    @li
+      Compiles in @b{238.24} s with sbt, or @b{171.48} s
 
 @slide
   @h3
-    @code{apache/spark}
+    Benchmarks
 
-  @ul
-    @li
-      @lnk("apache/spark", "https://github.com/apache/spark") is a cluster computing system for Big
-      Data.
-
-    @li
-      @b{1,805} source files, @b{390,721} lines of code, @b{24} modules.
-
-    @li
-      Compiles in @b{238.24} s with sbt, or @b{171.48} s (@b{72%}) in Bloop.
+  @img(src := "img/bench-charts.png", style := "border: none; box-shadow: none")
