@@ -196,19 +196,48 @@
     @li
       @fragment
       Ensures snappy developer workflow
+
     @li
       @fragment
-      Well-specified configuration format for projects.
-      @ul
-        @li
-          @fragment
-          Query build information from project files.
-        @li
-          @fragment
-          Create a Ninja/Make-based build tool.
-        @li
-          @fragment
-          Write easy and performant scripts.
+      Use the shell you know and love.
+
+    @li
+      @fragment
+      Benefit from awesome @code{tab}-completion
+
+      @p
+        @img(src := "img/tab-completion.gif", style := "border: none; box-shadow: none; al")
+
+@slide
+  @h2
+    Integrations
+  @h3
+    Configuration file
+
+  @ul
+    @li
+      Transparent, well-specified configuration file
+      @hl.diff
+        {
+          "project": {
+            "name": "mini-bloop",
+            "sources": [ "/projects/mini-bloop/src/main/scala" ],
+            "dependencies": [ "my-other-project" ],
+            "classpath": [ "(...)/2.12.6/scala-library-2.12.6.jar" ],
+            "classesDir": "/projects/mini-bloop/.bloop/mini-bloop/scala-2.12/classes",
+            "scala": { "version" : "2.12.6", (...) }
+            (...)
+        }
+
+    @li
+      @fragment
+      Query build information from the project files.
+    @li
+      @fragment
+      Create a Ninja/Make-based build tool.
+    @li
+      @fragment
+      Write easy and performant scripts.
 
 @slide
   @blockquote
