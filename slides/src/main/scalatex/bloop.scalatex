@@ -232,12 +232,14 @@
     @li
       @fragment
       Query build information from the project files.
-    @li
-      @fragment
-      Create a Ninja/Make-based build tool.
+
     @li
       @fragment
       Write easy and performant scripts.
+
+    @li
+      @fragment
+      @lnk("Specification of our configuration format", "https://scalacenter.github.io/bloop/docs/configuration-format/")
 
 @slide
   @blockquote
