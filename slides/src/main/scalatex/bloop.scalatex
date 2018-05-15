@@ -149,6 +149,14 @@
   @img(src := "img/rick-morty-crying.png", style := "border: none; box-shadow: none; width: 70%")
 
 @slide
+  @blockquote
+     «We created bloop to primarily support all the existing build tools that companies and Scala open-source developers use today.»
+      @br
+      @p
+        @(fontSize := "0.75em")
+        -- Us
+
+@slide
   @h2
     Integrations II
   @br
@@ -158,52 +166,67 @@
       Supports Scala 2 and future Scala 3.
     @li
       @fragment
+      Supports Scala.js and Scala Native (@lnk("open PR", "https://github.com/scalacenter/bloop/pull/485"))
+    @li
+      @fragment
       Build-tool-agnostic:
       @ul
         @li
           Currently: sbt (0.13 and 1.0), maven.
         @li
-          Future: bazel, gradle, pants.
+          Future: bazel, gradle, pants and more!
 
 @slide
   @h2
     Integrations III
-  @br
+  @h3
+    A command-line tool interface
   @ul
     @li
       @fragment
-      Command-line tool frontend
+      Ensures snappy developer workflow
     @li
-      Enables creation of new tools
+      @fragment
+      Well-specified configuration format for projects.
       @ul
         @li
-          Ninja/make-based build infrastructure
+          @fragment
+          Query build information from the project files.
         @li
-          Writing scripts is easy and performant
+          @fragment
+          Create a Ninja/Make-based build tool.
         @li
-          Encourages experimentation
+          @fragment
+          Write easy and performant scripts.
+
+@slide
+  @blockquote
+     «In the common use case when someone is working on a customer plugin in one build and wanting to iterate on core tooling the turns arounds are seconds instead of 10+ minutes.»
+      @br
+      @p
+        @(fontSize := "0.75em")
+        -- Happy Bloop user
 
 @slide
   @h2
-    Integrations IIII
+    Integrations IV
   @h3
-    Build Server Protocol
-  @br
+    Build Server Protocol (@strong{BSP})
   @ul
     @li
       @fragment
-      Developed at the Scala Center
+      An LSP-like protocol to communicate with build tools.
     @li
       @fragment
-      An LSP-like protocol to communicate with build tools
+      Clients are language servers and editors.
     @li
       @fragment
-      More info at "Build Server Protocol and new IDEAs"
+      More at "@lnk("Build Server Protocol and new IDEAs", "https://scala.sphere.it/")"
       @ul
         @li
-          Presented by Jorge and Justin at Scalasphere 2018
+          Presented by Jorge and Justin at @b{Scalasphere 2018}
         @li
-          Store behind BSP and IntelliJ integration
+          Demo of IntelliJ compiling with Bloop
 
 @slide
   @h2
@@ -232,6 +255,8 @@
         @ul
           @li
             Idea by Rory Graves (2017)
+          @li
+            Implementation for Zinc and Bloop (for now).
 
 @slide
   @h1
@@ -251,124 +276,3 @@
     @li
       scala/scala: xxx seconds
 
-@slide
-  @h3
-    We're throwing away the JVM's job!
-
-  @ul
-    @li
-      The JVM works hard to optimize code as it runs.
-
-    @li
-      Optimized/JITted compiler can be up to 20x faster!
-
-    @li
-      We should never discard those "hot" compilers.
-
-    @li
-      Restarting or reloading sbt throws away your hot compilers.
-
-@slide
-  @h3
-    We're duplicating work!
-
-  @ul
-    @li
-      IDEs continuously compile our code to give us diagnostics
-
-    @li
-      Our build tools compile our code too
-
-    @li
-      Why do they do the job twice?
-
-    @li
-      Can't they at least share some parts?
-
-@slide
-  @h3
-    Bloop is our solution.
-
-@slide
-  @h3
-    But...
-
-@slide
-  @h3
-    Adopting a new tool is hard
-
-  @ul
-    @li
-      Adoption depends on ease of use.
-
-    @li
-      Developers don't want to lear new tools.
-
-    @li
-      Habits are hard to change.
-
-@slide
-  @h3
-    New tools should integrate seamlessly in developers' workflow.
-
-@slide
-  @h3
-    Integrations
-
-  @ul
-    @li
-      Bloop implements the Build Server Protocol (BSP)
-
-    @li
-      BSP describes how a client can get infos about a build
-
-    @li
-      It is inspired by LSP
-
-    @li
-      More infos in Jorge's and Justin's talk at ScalaSphere 2018
-
-@slide
-  @h3
-    A new architecture
-
-  @p
-    // Graph...
-
-  @ul
-    @li
-      Both build tools and IDEs communicate with the BSP server
-
-    @li
-      They delegate compilation, etc. to the BSP server.
-
-@slide
-  @h3
-    Remote compilation
-
-  @ul
-    @li
-      Compilation jobs can be delegated to powerful, remote clusters
-
-    @li
-      ...
-
-@slide
-  @h3
-    Pipelined compilation
-
-  @ul
-    @li
-      ...
-
-@slide
-  @h1
-    Benchmarks
-
-@slide
-  @cite
-    "Bloop is awesome"
-
-@slide
-  @h1
-    Demo
