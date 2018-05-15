@@ -39,6 +39,7 @@ object RevealJs extends com.geirsson.scalatags.Tags {
   )
   def twitter = a(href := "https://twitter.com/jvican", "@jvican")
   def jtwitter = a(href := "https://twitter.com/ebenwert", "@ebenwert")
+  def mtwitter = a(href := "https://twitter.com/mnduhem", "@mnduhem")
   def organization = a(href := "https://scala.epfl.ch", "Scala Center")
   def jorganization = a(href := "http://jetbrains.com/", "Jetbrains")
   def fragment = `class` := "fragment"

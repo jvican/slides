@@ -3,6 +3,7 @@
 @slide
   @h2
     @img(src := "img/bloop.png", style := "border: none; box-shadow: none; width: 60%")
+
 @slide
   @h3
     @img(style := "border: none; width: 30%; box-shadow: none;", src:="img/jvican.jpg")
@@ -23,13 +24,23 @@
       @b{Obsession}: developer productivity
 @slide
   @h3
-    About Martin
+    @img(style := "border: none; width: 30%; box-shadow: none;", src := "img/martin.jpg")
+    @br
+    Martin @mtwitter
 
-  @p
-    bla bla
+  @ul
+    @li
+      Software engineer at @organization since March 2017
+      @ul
+        @li
+          I work on compilers and build tools.
+        @li
+          I don't like it when tools get in my way.
+        @li
+          Worked on sbt, Zinc, Scala Native and now Dotty.
 
-  @p
-    bla bla
+    @li
+      @b{Obsession}: Build tool agnosticity
 
 @slide
   @h3
@@ -100,7 +111,7 @@
   @h2
     @b{Hot} vs @b{Cold}
   @h4
-    Benchmarks in @lnk("Grafana.", "https://scala-ci.typesafe.com/grafana/dashboard/db/hot-vs-cold?orgId=1")
+    Benchmarks in @lnk("grafana.", "https://scala-ci.typesafe.com/grafana/dashboard/db/hot-vs-cold?orgid=1")
   @br
   @ul
     @li
@@ -259,20 +270,59 @@
             Implementation for Zinc and Bloop (for now).
 
 @slide
-  @h1
-    Benchmarks
-  @br
+  @h3
+    Benchmarking Bloop: sbt/sbt
 
   @ul
     @li
-      Our build tools take a long time to start up
+      @lnk("sbt/sbt", "https://github.com/sbt/sbt") is the Scala ecosystem's build tool.
 
     @li
-      sbt/sbt: xxx seconds
+      @b{852} source files, @b{51,408} lines of code, @b{20} modules.
 
     @li
-      guardian/frontend: xxx seconds
+      Compiles in @b{38.05} s with sbt, or @b{28.47} s (@b{75%}) in Bloop.
+
+@slide
+  @h3
+    Benchmarking Bloop: guardian/frontend
+
+  @ul
+    @li
+      @lnk("guardian/frontend", "https://github.com/guardian/frontend") is the source for
+      theguardian.com.
 
     @li
-      scala/scala: xxx seconds
+      @b{1,750} source files, @b{175,628} lines of code, @b{18} modules.
 
+    @li
+      Compiles in @b{88.62} s with sbt, or @b{63.42} s (@b{72%}) in Bloop.
+
+@slide
+  @h3
+    Benchmarking Bloop: akka/akka
+
+  @ul
+    @li
+      @lnk("akka/akka", "https://github.com/akka/akka") is a toolkit for building concurrent apps.
+
+    @li
+      @b{1,775} source files, @b{330,555} lines of code, @b{36} modules.
+
+    @li
+      Compiles in @b{263.7} s with sbt, or @b{215.7} s (@b{81%}) in Bloop.
+
+@slide
+  @h3
+    Benchmarking Bloop: apache/spark
+
+  @ul
+    @li
+      @lnk("apache/spark", "https://github.com/apache/spark") is a cluster computing system for Big
+      Data.
+
+    @li
+      @b{1,805} source files, @b{390,721} lines of code, @b{24} modules.
+
+    @li
+      Compiles in @b{238.24} s with sbt, or @b{171.48} s (@b{72%}) in Bloop.
