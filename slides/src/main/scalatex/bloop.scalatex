@@ -1,80 +1,242 @@
 @import com.geirsson.reavealjs.RevealJs._
 
 @slide
-  @h1
-    Meet Bloop
-  @h3
-    And get more productive with Scala
-
+  @h2
+    @img(src := "img/bloop.png", style := "border: none; box-shadow: none; width: 60%")
 @slide
   @h3
-    About us
-
-  @p
-    bla bla
-
-  @p
-    bla bla
-
-@slide
-  @h3
-    Agenda
-
+    @img(style := "border: none; width: 30%; box-shadow: none;", src:="img/jvican.jpg")
+    @br
+    Jorge @twitter
   @ul
     @li
-      What is Bloop?
+      Devtools for ~2.5 years at @organization
+      @ul
+        @li
+          I co-maintain Scala's incremental compiler (Zinc)
+        @li
+          I work on build tools and build servers
+        @li
+          @code{scalac}, compiler plugins and infrastructure
 
     @li
-      What hinders developer productivity today?
-
-    @li
-      How can we solve those problems?
-
-    @li
-      How to turn those solutions in tooling
-
-    @li
-      Benchmarks & numbers
-
-    @li
-      Demo
-
+      @b{Obsession}: developer productivity
 @slide
-  @img(src := "img/bloop.png",
-       style := "border: none; box-shadow: none; width: 80%")
-
-@slide
-  @h2
-    What is Bloop?
+  @h3
+    About Martin
 
   @p
-    Bloop is tool we wrote to make developers more productive.
+    bla bla
 
   @p
-    Bloop is a compile and test server that helps you get a better workflow.
+    bla bla
 
 @slide
   @h3
-    What problems are we solving?
-
-  @p
-    @ol
-      @li
-        Efforts are duplicated in the Scala tooling space.
-
-      @li
-        Scala developers need a faster workflow.
-
-  @p
-    Bloop addresses both problems, we'll focus on the second.
-
-@slide
-  @h2
-    Scala developers need a faster workflow
+    @b{Productivity}: any task you do is bound by the speed of your thinking process, not the tools you use.
 
 @slide
   @h3
-    Our tools are slow
+    @b{Minimize} the amount of time it passes between a change in the code and an execution result.
+
+@slide
+  @img(src := "img/build-tools-monsters.png", style := "border: none; box-shadow: none; width: 100%")
+
+@slide
+  @img(src := "img/bloop-logo2.png", style := "border: none; box-shadow: none; width: 90%")
+
+@slide
+  @h1
+    @b{Compilation server}
+  @h3
+    "The new fawn in the block"
+
+@slide
+  @h2
+    @b{Old architecture}
+
+  @dotty
+    "Build tool A" -> "Compiler A";
+    "Other CLI tools" -> "Compiler B";
+    "IDE" -> "Compiler C";
+
+@slide
+  @h2
+    @b{New architecture}
+
+  @dotty
+    "Build tool A" -> "Bloop";
+    "Other CLI tools" -> "Bloop";
+    "IDE" -> "Bloop";
+
+@slide
+  @h2
+    @b{Hot} compilers
+  @h4
+    What is that?
+
+  @img(src := "img/hot-compiler.jpg", style := "border: none; box-shadow: none; width: 60%")
+
+@slide
+  @h3
+    Why being @b{hot} is important 🕺💃
+  @h4
+    @ul
+      @li
+        Performance diff against cold compilers is critical.
+      @li
+        Compilers are re-used by different tools.
+      @li
+        We kill hot compilers more often than we think.
+        @ul
+          @li
+            @code{sbt> reload}
+          @li
+            Killing accidentally the build tool.
+          @li
+            Every time we use sbt in different builds concurrently.
+
+@slide
+  @h2
+    @b{Hot} vs @b{Cold}
+  @h4
+    Benchmarks in @lnk("Grafana.", "https://scala-ci.typesafe.com/grafana/dashboard/db/hot-vs-cold?orgId=1")
+  @br
+  @ul
+    @li
+      Cold compilation can be up to 18x slower!
+    @li
+      Hot'ting the JVM is expensive, it takes:
+        @ul
+          @li
+            CPU cycles, RAM, power (battery)...
+
+@slide
+  @h2
+    @img(src := "img/poor-rick.png", style := "border: none; box-shadow: none; width: 50%")
+
+@slide
+  @h2
+    Centralization
+  @h4
+    @blockquote
+      @strong
+        "One server to compile them all"
+  @h4
+    @hl.diff
+      --- a/nothing.properties
+      +++ b/bloop.properties
+      - build.tool.specific=true
+      - one.time.effort=false
+      - shared.code=false
+      - robust=false
+      - easier.to.maintain=false
+      - easier.to.test=false
+      - bigger.impact=false
+      + build.tool.specific=false
+      + one.time.effort=true
+      + shared.code=true
+      + robust=true
+      + easier.to.maintain=true
+      + easier.to.test=true
+      + bigger.impact=true
+
+@slide
+  @h2
+    Integrations I
+  @h3
+    @b{Paramount} for adoption.
+  @img(src := "img/rick-morty-crying.png", style := "border: none; box-shadow: none; width: 70%")
+
+@slide
+  @h2
+    Integrations II
+  @br
+  @ul
+    @li
+      @fragment
+      Supports Scala 2 and future Scala 3.
+    @li
+      @fragment
+      Build-tool-agnostic:
+      @ul
+        @li
+          Currently: sbt (0.13 and 1.0), maven.
+        @li
+          Future: bazel, gradle, pants.
+
+@slide
+  @h2
+    Integrations III
+  @br
+  @ul
+    @li
+      @fragment
+      Command-line tool frontend
+    @li
+      Enables creation of new tools
+      @ul
+        @li
+          Ninja/make-based build infrastructure
+        @li
+          Writing scripts is easy and performant
+        @li
+          Encourages experimentation
+
+@slide
+  @h2
+    Integrations IIII
+  @h3
+    Build Server Protocol
+  @br
+  @ul
+    @li
+      @fragment
+      Developed at the Scala Center
+    @li
+      @fragment
+      An LSP-like protocol to communicate with build tools
+    @li
+      @fragment
+      More info at "Build Server Protocol and new IDEAs"
+      @ul
+        @li
+          Presented by Jorge and Justin at Scalasphere 2018
+        @li
+          Store behind BSP and IntelliJ integration
+
+@slide
+  @h2
+    New use cases
+  @ul
+    @li
+      @fragment
+      Better caching opportunities
+      @ul
+        @li
+          In-memory over writing to disk
+        @li
+          Needs invalidation logic
+    @li
+      @fragment
+      Remote compilation, requires:
+      @ul
+        @li
+          Independence of compile processes
+        @li
+          Deduplication of compile requests
+
+    @li
+      @fragment
+      Pipelined compilation
+        @ul
+          @li
+            Idea by Rory Graves (2017)
+
+@slide
+  @h1
+    Benchmarks
+  @br
 
   @ul
     @li
