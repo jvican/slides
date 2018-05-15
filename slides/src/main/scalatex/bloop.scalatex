@@ -277,7 +277,7 @@
   @h2
     Pioneering use cases
   @h3
-    Remote compilation
+    @strong{Remote compilation}
   @ul
     @li
       @fragment
@@ -291,33 +291,38 @@
       @ul
         @li
           Independence of compile processes @br
-          (no shared state)
         @li
           Deduplication of compile requests @br
-          (only from file system)
 
 @slide
   @h2
     Pioneering use cases
   @h3
-    Pipelined compilation
+    @strong{Pipelined compilation}
+  @h4
     @ul
       @li
         @fragment
         Pitched in by Rory Graves at Scalasphere 2017
       @li
         @fragment
-        High impact for both any build graph
+        High impact for any build graph!
       @li
         @fragment
-        Restricted when Java compilation is required
+        Restricted gains when Java compilation is required
       @li
         @fragment
-        Implemented in Zinc and Bloop (for now).
+        Implemented in Zinc and Bloop (for now)
+
+@slide
+  @h3
+    Timeline
+  @h4
+    @img(src := "img/pipelined-timeline.png", style := "border: none; box-shadow: none; width: 80%")
 
 @slide
   @h1
-    Compilation benchmarks
+    Compilation @strong{benchmarks}
 
 @slide
   @h3
@@ -364,7 +369,7 @@
 
 @slide
   @h3
-    Benchmarking Bloop: apache/spark
+    @code{apache/spark}
 
   @ul
     @li
