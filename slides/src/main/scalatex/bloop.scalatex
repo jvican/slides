@@ -43,6 +43,14 @@
       @b{Obsession}: Build tool agnosticity
 
 @slide
+  @blockquote
+     «In the common use case when someone is working on a customer plugin in one build and wanting to iterate on core tooling the turns arounds are seconds instead of 10+ minutes.»
+      @br
+      @p
+        @(fontSize := "0.75em")
+        -- Happy Bloop user
+
+@slide
   @h3
     @b{Productivity}: any task you do is bound by the speed of your thinking process, not the tools you use.
 
@@ -92,16 +100,16 @@
         It @strong{complements} your go-to build tool
       @li
         @fragment
-        It helps users who don't want to stuff their builds
-      @li
-        @fragment
-        Developer workflows are orthogonal to build tools
+        It enables you to write custom extensions for your team
+        @ul
+          @li
+            Developer workflows are orthogonal to build tools
 
 @slide
   @h1
     @b{Compilation server}
   @h3
-    "The new fawn in the block"
+    The new kid in the block
 
 @slide
   @h2
@@ -131,13 +139,13 @@
 
 @slide
   @h3
-    Why being @b{hot} is important
+    @b{Hot} compilers
   @h4
     @ul
       @li
         Performance diff against cold compilers is critical.
       @li
-        Compilers are re-used by different tools.
+        Every developer tools has its own compiler instance.
       @li
         We kill hot compilers more often than we think.
         @ul
@@ -292,20 +300,12 @@
           Future: bazel, gradle, pants and more!
 
 @slide
-  @blockquote
-     «In the common use case when someone is working on a customer plugin in one build and wanting to iterate on core tooling the turns arounds are seconds instead of 10+ minutes.»
-      @br
-      @p
-        @(fontSize := "0.75em")
-        -- Happy Bloop user
-
-@slide
   @h2
     Build Server Protocol (@strong{BSP})
   @ul
     @li
       @fragment
-      Another way of integration with Bloop.
+      Another way of integrating with Bloop.
     @li
       @fragment
       An LSP-like protocol to communicate with build tools.
@@ -350,54 +350,20 @@
         @li
           In-memory storage over writing to disk/SSD
         @li
-          File watching files to invalidate caches across builds
+          Safer cache invadalidation
+          @ul
+            @li
+              Classpath
+            @li
+              Source hashes
         @li
-          Parallel compilation bookkeeping (classpath or source hashing)
+          Better task parallelization
 
 @slide
-  @h2
-    Pioneering use cases
   @h3
-    @strong{Remote compilation}
-  @ul
-    @li
-      @fragment
-      Popular use case for CI servers
-    @li
-      @fragment
-      Keep cloud instances alive for compilation jobs
-    @li
-      @fragment
-      Requires architectural changes:
-      @ul
-        @li
-          Independence of compile processes @br
-        @li
-          Deduplication of compile requests @br
-
-@slide
-  @h2
-    Pioneering use cases
+    On the roadmap
   @h3
     @strong{Pipelined compilation}
-  @h4
-    @ul
-      @li
-        @fragment
-        Pitched in by Rory Graves at Scalasphere 2017
-      @li
-        @fragment
-        High impact for any build graph!
-      @li
-        @fragment
-        Restricted gains when Java compilation is required
-      @li
-        @fragment
-        Implemented in Zinc and Bloop (for now)
-
-@slide
-  @h3
-    Timeline
   @h4
     @img(src := "img/pipelined-timeline.png", style := "border: none; box-shadow: none; width: 80%")
 
@@ -559,6 +525,48 @@
     Benchmarks
 
   @img(src := "img/bench-charts.png", style := "border: none; box-shadow: none; width: 80%")
+
+@slide
+  @h2
+    On the roadmap
+  @h3
+    @strong{Remote compilation}
+  @ul
+    @li
+      @fragment
+      Popular use case for CI servers
+    @li
+      @fragment
+      Keep cloud instances alive for compilation jobs
+    @li
+      @fragment
+      Requires architectural changes:
+      @ul
+        @li
+          Independence of compile processes @br
+        @li
+          Deduplication of compile requests @br
+
+@slide
+  @h2
+    On the roadmap
+  @h3
+    @strong{Pipelined compilation}
+  @h4
+    @ul
+      @li
+        @fragment
+        Pitched in by Rory Graves at Scalasphere 2017
+      @li
+        @fragment
+        High impact for any build graph!
+      @li
+        @fragment
+        Restricted gains when Java compilation is required
+      @li
+        @fragment
+        Implemented in Zinc and Bloop (for now)
+
 
 @slide
   @h1
