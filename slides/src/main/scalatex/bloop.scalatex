@@ -60,12 +60,6 @@
   @img(src := "img/bloop-logo2.png", style := "border: none; box-shadow: none; width: 90%")
 
 @slide
-  @h1
-    @b{Compilation server}
-  @h3
-    "The new fawn in the block"
-
-@slide
   @h2
     @b{@code{zinc++}}
   @h3
@@ -82,6 +76,12 @@
         Build tools are too heavyweight
       @li
         Build tools are difficult to integrate with
+
+@slide
+  @h1
+    @b{Compilation server}
+  @h3
+    "The new fawn in the block"
 
 @slide
   @h2
@@ -160,54 +160,15 @@
         Changes to the codebase have higher impact
       @li
         Easier to maintain, optimize and test
+      @li
+        No more fragmentation in build tools
+          @ul
+            @li
+              e.g. Gradle is still using Zinc 0.13.x!
 
 @slide
   @h2
-    Integrations
-  @h3
-    @b{Paramount} for adoption.
-  @img(src := "img/rick-morty-crying.png", style := "border: none; box-shadow: none; width: 70%")
-
-@slide
-  @blockquote
-     «We created bloop to primarily support all the existing build tools that companies and Scala open-source developers use today.»
-      @br
-      @p
-        @(fontSize := "0.75em")
-        -- Us
-
-@slide
-  @ul
-    @li
-      Improving only sbt is @strong{not} a solution.
-    @li
-      Improving only new build tools is @strong{not} a solution.
-
-@slide
-  @h2
-    Integrations
-  @br
-  @ul
-    @li
-      @fragment
-      Supports Scala 2 and future Scala 3.
-    @li
-      @fragment
-      Supports Scala.js and Scala Native (@lnk("open PR", "https://github.com/scalacenter/bloop/pull/485"))
-    @li
-      @fragment
-      Build-tool-agnostic:
-      @ul
-        @li
-          Current: sbt, maven.
-        @li
-          Future: bazel, gradle, pants and more!
-
-@slide
-  @h2
-    Integrations
-  @h3
-    A command-line tool interface
+    A command-line tool
   @ul
     @li
       @fragment
@@ -270,6 +231,49 @@
     @li
       @fragment
       @lnk("Specification of our configuration format", "https://scalacenter.github.io/bloop/docs/configuration-format/")
+
+
+@slide
+  @h2
+    Integrations
+  @h3
+    @b{Paramount} for adoption.
+  @img(src := "img/rick-morty-crying.png", style := "border: none; box-shadow: none; width: 70%")
+
+@slide
+  @blockquote
+     «We created bloop to primarily support all the existing build tools that companies and Scala open-source developers use today.»
+      @br
+      @p
+        @(fontSize := "0.75em")
+        -- Us
+
+@slide
+  @ul
+    @li
+      Improving only sbt is @strong{not} a solution.
+    @li
+      Improving only new build tools is @strong{not} a solution.
+
+@slide
+  @h2
+    Integrations
+  @br
+  @ul
+    @li
+      @fragment
+      Supports Scala 2 and future Scala 3.
+    @li
+      @fragment
+      Supports Scala.js and Scala Native (@lnk("open PR", "https://github.com/scalacenter/bloop/pull/485"))
+    @li
+      @fragment
+      Build-tool-agnostic:
+      @ul
+        @li
+          Current: sbt, maven.
+        @li
+          Future: bazel, gradle, pants and more!
 
 @slide
   @blockquote
