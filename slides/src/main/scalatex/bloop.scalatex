@@ -62,6 +62,11 @@
 @slide
   @h2
     @b{@code{zinc++}}
+  @img(style := "width: 40%", src:="img/zinc.jpg")
+
+@slide
+  @h2
+    @b{@code{zinc++}}
   @h3
     A gap to fill in
   @h4
@@ -76,6 +81,21 @@
         Build tools are too heavyweight
       @li
         Build tools are difficult to integrate with
+
+@slide
+  @h2
+    @b{@code{zinc++}}
+  @h4
+    @ul
+      @li
+        @fragment
+        It @strong{complements} your go-to build tool
+      @li
+        @fragment
+        It helps users who don't want to stuff their builds
+      @li
+        @fragment
+        Developer workflows are orthogonal to build tools
 
 @slide
   @h1
