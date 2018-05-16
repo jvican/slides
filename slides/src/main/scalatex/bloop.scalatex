@@ -144,6 +144,38 @@
 
 @slide
   @h2
+    Properties
+  @h3
+    @strong{Compiler agnostic}
+  @ul
+    @li
+      Scala 2 support.
+    @li
+      Scala 3 support.
+
+@slide
+  @h2
+    Properties
+  @h3
+    @strong{Better optimization opportunities}
+  @ul
+    @li
+      Knowledge about build graph enables
+      @ul
+        @li
+          In-memory storage over writing to disk/SSD
+        @li
+          Safer cache invadalidation
+          @ul
+            @li
+              Classpath
+            @li
+              Source hashes
+        @li
+          Better task parallelization
+
+@slide
+  @h2
     @b{Old architecture}
 
   @dotLR
@@ -432,7 +464,7 @@
   @ul
     @li
       @fragment
-      Another way of integrating with Bloop.
+      Bloop is a BSP server.
     @li
       @fragment
       An LSP-like protocol to communicate with build tools.
@@ -450,24 +482,27 @@
   @h2
     Build Server Protocol
   @h3
-    Use cases
+    Use cases in Bloop
   @ul
     @li
       @fragment
-      Efficient @code{~compile} or @code{~test} from IntelliJ
+      Efficient import project from IDEs and editors
     @li
       @fragment
-      Editors notify modified files directly to the build tool
-    @li
-      @fragment
-      Better integration with build tools
+      Better integration with bloop
       @ul
         @li
           sbt, maven, bazel, et cetera
 
 @slide
   @h2
-    Pioneering use cases
+    Build Server Protocol
+  @h3
+    Intellij gif BSP demo.
+
+@slide
+  @h2
+    Properties
   @h3
     @strong{Better optimization opportunities}
   @ul
