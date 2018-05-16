@@ -52,6 +52,11 @@
 
 @slide
   @h3
+    Good tools should be sufficiently @b{flexible to embrace your workflow}; not force you to adopt
+    their vision.
+
+@slide
+  @h3
     @b{Productivity}: any task you do is bound by the speed of your thinking process, not the tools you use.
 
 @slide
@@ -399,28 +404,78 @@
     @code{$ sbt bloopInstall}
 
 @slide
-  @h3
+  @h2
     Using Bloop
+
+  @h3
+    @code{bloop compile}
 
   @ul
     @li
-      Bloop exposes 4 main commands:
+      Compiles your project (and its dependencies) in parallel.
 
     @li
-      @fragment
-      @code{bloop compile} compiles your project
+      @code{--watch} will re-compile when source files change.
 
     @li
-      @fragment
-      @code{bloop test} runs your tests
+      @code{--reporter} lets you define the error reporter to use
+
+      @img(src := "img/reporters.png", style := "border: none; box-shadow: none; width: 80%")
 
     @li
-      @fragment
-      @code{bloop console} opens a REPL
+      Use @code{--help} to see all the options.
+
+@slide
+  @h2
+    Using Bloop
+
+  @h3
+    @code{bloop test}
+
+  @ul
+    @li
+      Test a project and its dependencies
 
     @li
-      @fragment
-      @code{bloop run} runs your project
+      @code{--isolated} to skip testing the dependencies
+
+    @li
+      Use @code{--only} to filter the tests to run
+
+    @hl.longScala{bloop test frontend --only bloop.engine.* --watch}
+
+@slide
+  @h2
+    Using Bloop
+
+  @h3
+    @code{bloop run}
+
+  @ul
+    @li
+      Runs a @code{main} method in your project
+
+    @li
+      Use @code{--main} to specify the main (or let Bloop decide)
+
+    @li
+      Use @code{--watch} to re-run when source files are modified
+
+    @hl.longScala{bloop run neural-network -- -train img/**/*.jpg -out $HOME/data.dat}
+
+@slide
+  @h2
+    Using Bloop
+
+  @h3
+    @code{bloop console}
+
+  @ul
+    @li
+      Starts a new scala REPL with your project on the classpath
+
+    @li
+      Equivalent to @code{sbt console}
 
 @slide
   @h3
