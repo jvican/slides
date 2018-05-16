@@ -225,20 +225,34 @@
   @h3
     Configuration file
 
+  @hl.longJson
+    {
+    "project" : {
+      "name" : "mini-bloop",
+      "directory" : "/Users/martin/Desktop/mini-bloop",
+      "sources" : [ "/Users/martin/Desktop/mini-bloop/src/main/scala" ],
+      "dependencies" : [  ],
+      "classpath" : [ "/Users/martin/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.3.jar" ],
+      "classpathOptions" : { (...) },
+      "out" : "/Users/martin/Desktop/mini-bloop/.bloop/mini-bloop",
+      "classesDir" : "/Users/martin/Desktop/mini-bloop/.bloop/mini-bloop/scala-2.12/classes",
+      "scala" : {
+        "organization" : "org.scala-lang",
+        "name" : "scala-compiler",
+        "version" : "2.12.3",
+        "options" : [ ],
+        "jars" : [ (...) ]
+      }, (...)
+
+
+@slide
+  @h2
+    Integrations
+  @h3
+    Configuration file
   @ul
     @li
       Transparent, well-specified configuration file
-      @hl.diff
-        {
-          "project": {
-            "name": "mini-bloop",
-            "sources": [ "/projects/mini-bloop/src/main/scala" ],
-            "dependencies": [ "my-other-project" ],
-            "classpath": [ "(...)/2.12.6/scala-library-2.12.6.jar" ],
-            "classesDir": "/projects/mini-bloop/.bloop/mini-bloop/scala-2.12/classes",
-            "scala": { "version" : "2.12.6", (...) }
-            (...)
-        }
 
     @li
       @fragment

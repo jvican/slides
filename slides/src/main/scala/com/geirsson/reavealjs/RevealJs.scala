@@ -363,6 +363,7 @@ def footer =
   object hl {
     val scala = new hl("scala", true)
     val longScala = new hl("scala", false)
+    val longJson = new hl("json", false)
     val diff = new hl("diff", true)
     val shortScala = new hl(lang = "scala", shortSnippet = true, tight = true)
   }
