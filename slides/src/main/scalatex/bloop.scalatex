@@ -499,36 +499,6 @@
     Build Server Protocol
   @h3
     Intellij gif BSP demo.
-
-@slide
-  @h2
-    Properties
-  @h3
-    @strong{Better optimization opportunities}
-  @ul
-    @li
-      Knowledge about build graph enables
-      @ul
-        @li
-          In-memory storage over writing to disk/SSD
-        @li
-          Safer cache invadalidation
-          @ul
-            @li
-              Classpath
-            @li
-              Source hashes
-        @li
-          Better task parallelization
-
-@slide
-  @h3
-    On the roadmap
-  @h3
-    @strong{Pipelined compilation}
-  @h4
-    @img(src := "img/pipelined-timeline.png", style := "border: none; box-shadow: none; width: 80%")
-
 @slide
   @h1
     Compilation @strong{benchmarks}
@@ -639,6 +609,14 @@
           Independence of compile processes @br
         @li
           Deduplication of compile requests @br
+
+@slide
+  @h3
+    On the roadmap
+  @h3
+    @strong{Pipelined compilation}
+  @h4
+    @img(src := "img/pipelined-timeline.png", style := "border: none; box-shadow: none; width: 80%")
 
 @slide
   @h2
