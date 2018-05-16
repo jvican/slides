@@ -114,8 +114,8 @@
 
 @slide
   @h2
-    Demand for a compilation service
-  @img(src := "img/emoji-thinking.png", style := "border: none; box-shadow: none; width: 60%")
+    What can we do?
+  @img(src := "img/emoji-thinking.png", style := "border: none; box-shadow: none; width: 40%")
 
 @slide
   @h2
@@ -203,8 +203,8 @@
             CPU cycles, RAM, power (battery)...
 
 @slide
-  @h2
-    @img(src := "img/poor-rick.png", style := "border: none; box-shadow: none; width: 50%")
+  @h1
+    Using @strong{Bloop}
 
 @slide
   @h2
@@ -267,121 +267,6 @@
     @li
       @fragment
       @lnk("Specification of our configuration format", "https://scalacenter.github.io/bloop/docs/configuration-format/")
-
-
-@slide
-  @h2
-    Integrations
-  @h3
-    @b{Paramount} for adoption.
-  @img(src := "img/rick-morty-crying.png", style := "border: none; box-shadow: none; width: 70%")
-
-@slide
-  @blockquote
-     «We created bloop to primarily support all the existing build tools that companies and Scala open-source developers use today.»
-      @br
-      @p
-        @(fontSize := "0.75em")
-        -- Us
-
-@slide
-  @ul
-    @li
-      Improving only sbt is @strong{not} a solution.
-    @li
-      Improving only new build tools is @strong{not} a solution.
-
-@slide
-  @h2
-    Integrations
-  @br
-  @ul
-    @li
-      @fragment
-      Supports Scala 2 and future Scala 3.
-    @li
-      @fragment
-      Supports Scala.js and Scala Native (@lnk("open PR", "https://github.com/scalacenter/bloop/pull/485"))
-    @li
-      @fragment
-      Build-tool-agnostic:
-      @ul
-        @li
-          Current: sbt, maven.
-        @li
-          Future: bazel, gradle, pants and more!
-
-@slide
-  @h2
-    Build Server Protocol (@strong{BSP})
-  @ul
-    @li
-      @fragment
-      Another way of integrating with Bloop.
-    @li
-      @fragment
-      An LSP-like protocol to communicate with build tools.
-    @li
-      @fragment
-      Clients are language servers and editors.
-    @li
-      @fragment
-      More at "@lnk("Build Server Protocol and new IDEAs", "https://scala.sphere.it/")"
-      @ul
-        @li
-          Presented by Jorge and Justin at @b{Scalasphere 2018}
-
-@slide
-  @h2
-    Build Server Protocol
-  @h3
-    Use cases
-  @ul
-    @li
-      @fragment
-      Efficient @code{~compile} or @code{~test} from IntelliJ
-    @li
-      @fragment
-      Editors notify modified files directly to the build tool
-    @li
-      @fragment
-      Better integration with build tools
-      @ul
-        @li
-          sbt, maven, bazel, et cetera
-
-@slide
-  @h2
-    Pioneering use cases
-  @h3
-    @strong{Better optimization opportunities}
-  @ul
-    @li
-      Knowledge about build graph enables
-      @ul
-        @li
-          In-memory storage over writing to disk/SSD
-        @li
-          Safer cache invadalidation
-          @ul
-            @li
-              Classpath
-            @li
-              Source hashes
-        @li
-          Better task parallelization
-
-@slide
-  @h3
-    On the roadmap
-  @h3
-    @strong{Pipelined compilation}
-  @h4
-    @img(src := "img/pipelined-timeline.png", style := "border: none; box-shadow: none; width: 80%")
-
-@slide
-  @h1
-    Using @strong{Bloop}
 
 @slide
   @h2
@@ -497,6 +382,117 @@
 
     @li
       Get help with @code{--help}
+
+
+@slide
+  @h2
+    Integrations
+  @h3
+    @b{Paramount} for adoption.
+  @img(src := "img/rick-morty-crying.png", style := "border: none; box-shadow: none; width: 70%")
+
+@slide
+  @blockquote
+     «We created bloop to primarily support all the existing build tools that companies and Scala open-source developers use today.»
+      @br
+      @p
+        @(fontSize := "0.75em")
+        -- Us
+
+@slide
+  @ul
+    @li
+      Improving only sbt is @strong{not} a solution.
+    @li
+      Improving only new build tools is @strong{not} a solution.
+
+@slide
+  @h2
+    Integrations
+  @br
+  @ul
+    @li
+      @fragment
+      Supports Scala 2 and future Scala 3.
+    @li
+      @fragment
+      Supports Scala.js and Scala Native (@lnk("open PR", "https://github.com/scalacenter/bloop/pull/485"))
+    @li
+      @fragment
+      Build-tool-agnostic:
+      @ul
+        @li
+          Current: sbt, maven.
+        @li
+          Future: bazel, gradle, pants and more!
+
+@slide
+  @h2
+    Build Server Protocol (@strong{BSP})
+  @ul
+    @li
+      @fragment
+      Another way of integrating with Bloop.
+    @li
+      @fragment
+      An LSP-like protocol to communicate with build tools.
+    @li
+      @fragment
+      Clients are language servers and editors.
+    @li
+      @fragment
+      More at "@lnk("Build Server Protocol and new IDEAs", "https://scala.sphere.it/")"
+      @ul
+        @li
+          Presented by Jorge and Justin at @b{Scalasphere 2018}
+
+@slide
+  @h2
+    Build Server Protocol
+  @h3
+    Use cases
+  @ul
+    @li
+      @fragment
+      Efficient @code{~compile} or @code{~test} from IntelliJ
+    @li
+      @fragment
+      Editors notify modified files directly to the build tool
+    @li
+      @fragment
+      Better integration with build tools
+      @ul
+        @li
+          sbt, maven, bazel, et cetera
+
+@slide
+  @h2
+    Pioneering use cases
+  @h3
+    @strong{Better optimization opportunities}
+  @ul
+    @li
+      Knowledge about build graph enables
+      @ul
+        @li
+          In-memory storage over writing to disk/SSD
+        @li
+          Safer cache invadalidation
+          @ul
+            @li
+              Classpath
+            @li
+              Source hashes
+        @li
+          Better task parallelization
+
+@slide
+  @h3
+    On the roadmap
+  @h3
+    @strong{Pipelined compilation}
+  @h4
+    @img(src := "img/pipelined-timeline.png", style := "border: none; box-shadow: none; width: 80%")
 
 @slide
   @h1
