@@ -68,8 +68,9 @@
 @slide
   @h2
     @b{@code{zinc++}}
-  @h4
+  @h3
     A gap to fill in
+  @h4
     @ul
       @li
         @code{scalac} gives you only cold compilation.
@@ -77,6 +78,10 @@
         @code{scalac} doesn't give you incrementality.
       @li
         @code{scalac} cannot reuse information about the build.
+      @li
+        Build tools are too heavyweight
+      @li
+        Build tools are difficult to integrate with
 
 @slide
   @h2
