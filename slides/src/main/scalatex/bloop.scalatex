@@ -57,6 +57,10 @@
     their vision.
 
 @slide
+  @h2
+    How Bloop makes you more productive
+
+@slide
   @h3
     @b{Productivity}: any task you do is bound by the speed of your thinking process, not the tools you use.
 
@@ -145,6 +149,24 @@
 
 @slide
   @h2
+    @b{Old architecture}
+
+  @dotLR
+    "Build tool A" -> "Compiler A";
+    "Other CLI tools" -> "Compiler B";
+    "IDE" -> "Compiler C";
+
+@slide
+  @h2
+    @b{New architecture}
+
+  @dotLR
+    "Build tool A" -> "Bloop";
+    "Other CLI tools" -> "Bloop";
+    "IDE" -> "Bloop";
+
+@slide
+  @h2
     Properties
   @h3
     @strong{Compiler agnostic}
@@ -153,6 +175,34 @@
       Scala 2 support.
     @li
       Scala 3 support.
+
+@slide
+  @h2
+    Properties
+  @h3
+    @strong{Platform agnostic}
+  @ul
+    @li
+      JVM
+    @li
+      JS
+    @li
+      Native
+
+@slide
+  @h2
+    Properties
+  @h3
+    @strong{Build-tool agnostic}
+  @ul
+    @li
+      sbt
+    @li
+      Maven
+    @li
+      Gradle
+    @li
+      etc.
 
 @slide
   @h2
@@ -174,24 +224,6 @@
               Source hashes
         @li
           Better task parallelization
-
-@slide
-  @h2
-    @b{Old architecture}
-
-  @dotLR
-    "Build tool A" -> "Compiler A";
-    "Other CLI tools" -> "Compiler B";
-    "IDE" -> "Compiler C";
-
-@slide
-  @h2
-    @b{New architecture}
-
-  @dotLR
-    "Build tool A" -> "Bloop";
-    "Other CLI tools" -> "Bloop";
-    "IDE" -> "Bloop";
 
 @slide
   @h2
@@ -438,26 +470,6 @@
       Improving only sbt is @strong{not} a solution.
     @li
       Improving only new build tools is @strong{not} a solution.
-
-@slide
-  @h2
-    Integrations
-  @br
-  @ul
-    @li
-      @fragment
-      Supports Scala 2 and future Scala 3.
-    @li
-      @fragment
-      Supports Scala.js and Scala Native (@lnk("open PR", "https://github.com/scalacenter/bloop/pull/485"))
-    @li
-      @fragment
-      Build-tool-agnostic:
-      @ul
-        @li
-          Current: sbt, maven.
-        @li
-          Future: bazel, gradle, pants and more!
 
 @slide
   @h2
