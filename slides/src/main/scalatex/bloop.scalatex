@@ -510,8 +510,15 @@
 @slide
   @h2
     Build Server Protocol
-  @h3
-    Intellij gif BSP demo.
+
+  @img(src := "img/bsp/1.jpg", style := "border: none; box-shadow: none; width: 80%")
+
+@slide
+  @h2
+    Build Server Protocol
+
+  @img(src := "img/bsp/2.jpg", style := "border: none; box-shadow: none; width: 80%")
+
 @slide
   @h1
     Compilation @strong{benchmarks}
