@@ -80,11 +80,11 @@
   @h4
     @ul
       @li
-        @code{scalac} gives you only cold compilation.
+        @code{scalac} gives you only cold compilation
       @li
-        @code{scalac} doesn't give you incrementality.
+        @code{scalac} doesn't give you incrementality
       @li
-        @code{scalac} cannot reuse information about the build.
+        @code{scalac} cannot know in which context is used
       @li
         Build tools are too heavyweight
       @li
@@ -104,6 +104,32 @@
         @ul
           @li
             Developer workflows are orthogonal to build tools
+          @li
+            Developer workflows depend on the culture of the company
+
+@slide
+  @h2
+    Demand for a compilation service
+  @img(src := "img/emoji-thinking.png", style := "border: none; box-shadow: none; width: 60%")
+
+@slide
+  @h2
+    Centralization
+  @h4
+    @blockquote
+      @strong
+        "One server to compile them all"
+  @h4
+    @ul
+      @li
+        Changes to the codebase have higher impact
+      @li
+        Easier to maintain, optimize and test
+      @li
+        No more fragmentation in build tools
+          @ul
+            @li
+              e.g. Gradle is still using Zinc 0.13.x!
 
 @slide
   @h1
@@ -174,25 +200,6 @@
 @slide
   @h2
     @img(src := "img/poor-rick.png", style := "border: none; box-shadow: none; width: 50%")
-
-@slide
-  @h2
-    Centralization
-  @h4
-    @blockquote
-      @strong
-        "One server to compile them all"
-  @h4
-    @ul
-      @li
-        Changes to the codebase have higher impact
-      @li
-        Easier to maintain, optimize and test
-      @li
-        No more fragmentation in build tools
-          @ul
-            @li
-              e.g. Gradle is still using Zinc 0.13.x!
 
 @slide
   @h2
