@@ -187,9 +187,7 @@
 
 @slide
   @h2
-    Integrations
-  @h3
-    Configuration file
+    Bloop configuration file
 
   @hl.longJson
     {
@@ -213,9 +211,7 @@
 
 @slide
   @h2
-    Integrations
-  @h3
-    Configuration file
+    Bloop configuration file
   @ul
     @li
       Transparent, well-specified configuration file
