@@ -546,3 +546,14 @@
 
   @h2
     Questions?
+
+  @h4(style := "font-size: 0.8em")
+    MacOS
+    @br
+    @code{$ brew install scalacenter/bloop/bloop}
+
+  @h4(style := "font-size: 0.8em")
+    Linux / Windows
+    @br
+    @code{$ curl -L https://tinyurl.com/bloop100M10 | python}
+
