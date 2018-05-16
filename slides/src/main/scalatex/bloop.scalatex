@@ -519,7 +519,7 @@
   @h3
     Benchmarks
 
-  @img(src := "img/bench-charts.png", style := "border: none; box-shadow: none")
+  @img(src := "img/bench-charts.png", style := "border: none; box-shadow: none; width: 80%")
 
 @slide
   @h1
